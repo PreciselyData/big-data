@@ -1,0 +1,47 @@
+!table
+!version 300
+!charset WindowsLatin1
+!edit_version 450
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 34
+    code Char (12) Index 1 ;
+    composite_crime_idx Smallint ;
+    violent_crime_idx Smallint ;
+    robbery_idx Smallint ;
+    rape_idx Smallint ;
+    aggravated_assault_idx Smallint ;
+    murder_idx Smallint ;
+    property_crime_idx Smallint ;
+    arson_idx Smallint ;
+    burglary_idx Smallint ;
+    auto_theft_idx Smallint ;
+    larceny_theft_idx Smallint ;
+    composite_crime_category Char (13) ;
+    violent_crime_category Char (13) ;
+    robbey_category Char (13) ;
+    rape_category Char (13) ;
+    aggravated_assault_category Char (13) ;
+    murder_category Char (13) ;
+    property_crime_category Char (13) ;
+    arson_category Char (13) ;
+    burglary_category Char (13) ;
+    auto_theft_category Char (13) ;
+    larcey_theft_category Char (13) ;
+    composite_crime_idx_st Smallint ;
+    violent_crime_idx_st Smallint ;
+    robbery_idx_st Smallint ;
+    rape_idx_st Smallint ;
+    aggravated_assault_idx_st Smallint ;
+    murder_idx_st Smallint ;
+    property_crime_idx_st Smallint ;
+    arson_idx_st Smallint ;
+    burglary_idx_st Smallint ;
+    auto_theft_idx_st Smallint ;
+    larceny_theft_idx_st Smallint ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "9075891e-3277-49ca-91d0-e5bcc571bd1a"
+end_metadata

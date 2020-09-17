@@ -1,0 +1,6 @@
+rootProject.name = "enrich-points-with-boundaries"
+
+include ":tab"
+include ":shape"
+include ":geodatabase"
+include ":using-schema"

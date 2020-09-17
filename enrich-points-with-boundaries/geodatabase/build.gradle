@@ -1,0 +1,33 @@
+plugins {
+	id 'scala'
+}
+
+version = '1.0.0'
+archivesBaseName = "${project.parent.name}-${project.name}"
+def spark_version = '2.0.1'
+def scala_version = '2.11'
+
+dependencies {
+	compileOnly "org.apache.spark:spark-core_$scala_version:$spark_version"
+	compileOnly "org.apache.spark:spark-sql_$scala_version:$spark_version"
+
+	implementation fileTree(dir: "$rootDir/lib", include: "*.jar")
+
+	testImplementation "org.apache.spark:spark-core_$scala_version:$spark_version"
+	testImplementation "org.apache.spark:spark-sql_$scala_version:$spark_version"
+	testImplementation "org.scalatest:scalatest_$scala_version:2.2.6"
+	testImplementation 'junit:junit:4.12'
+}
+
+//task to build jar that can run the verification on a cluster
+task testJar(type: Jar) {
+	archiveClassifier.set('tests-all')
+	from sourceSets.test.output
+	from zipTree(configurations.testRuntimeClasspath.filter {File f -> f.name.contains("scalatest")}.getSingleFile()) //adding scalatest for assertions
+}
+
+tasks.withType(Test) {
+	//set Hadoop binary lib for windows
+	systemProperty "hadoop.home.dir", "${project.rootDir}/hadoop-2.7.1"
+	maxHeapSize = "2560m"
+}
