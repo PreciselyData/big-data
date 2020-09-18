@@ -36,7 +36,7 @@ class GeohashAggregationTester extends FunSuite with BeforeAndAfterAll {
 
   test("Execute sample and assert output") {
     val paths = Array (
-      "./data/311data.csv",
+      "./data",
       "./build/output"
     )
 
