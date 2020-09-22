@@ -13,9 +13,10 @@ This sample includes the following data located in the `/data` folder:
 
 ## Building the sample
 1. Download the Spectrum Geocoding for Big Data distribution and extract the contents.
-2. Place the _spectrum-bigdata-geocoding-sdk-spark2-&lt;version&gt;.jar_ into the `/lib` directory of this sample.
-3. Place the contents of the `/resources` directory into the `/resources` directory of this sample.
-4. Use the following command from the root of the sample to build:
+1. Place the _spectrum-bigdata-geocoding-sdk-spark2-&lt;version&gt;.jar_ into the `/lib` directory of this sample.
+1. Place the contents of the `/resources` directory into the `/resources` directory of this sample.
+1. Place the `/sampleData/DC/sampleDictionary` directory into the `/data/referenceData` directory of this sample.
+1. Use the following command from the root of the sample to build:
     ```
     gradlew build
     ```
@@ -32,9 +33,9 @@ To execute the sample on a cluster, complete the following steps on your Hadoop 
 1. Copy the sample to a Hadoop cluster.
 1. Copy the dataset, resources, and input data to HDFS:
      ```
-     hadoop fs -copyFromLocal <localSampleDirectory>/multipass-geocoding/data/referenceData/WashingtonDC <hdfsDirectory>/data/referenceData
-     hadoop fs -copyFromLocal <localSampleDirectory>/multipass-geocoding/resources <hdfsDirectory>/resources
      hadoop fs -copyFromLocal <localSampleDirectory>/multipass-geocoding/data/inputData/addresses.csv <hdfsDirectory>/data/input
+     hadoop fs -copyFromLocal <localSampleDirectory>/multipass-geocoding/data/referenceData <hdfsDirectory>/data/referenceData
+     hadoop fs -copyFromLocal <localSampleDirectory>/multipass-geocoding/resources <hdfsDirectory>/resources
      ```
 1. Copy over all library dependencies to a location on the cluster (&lt;localDirectory&gt;/lib)
    1. _spectrum-bigdata-geocoding-sdk-spark2-&lt;version&gt;.jar_
