@@ -6,12 +6,6 @@ allprojects {
 	}
 }
 
-subprojects {
-	tasks.withType(Jar) {
-		archivesBaseName = "${project.parent.name}-${project.name}"
-	}
-}
-
 wrapper {
 	gradleVersion = "6.4.1"
 }

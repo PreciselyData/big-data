@@ -8,6 +8,7 @@ def scala_version = '2.11'
 //def scala_version = '2.12'
 def spark_version = '2.4.4'
 
+archivesBaseName = "${project.parent.name}-${project.name}_${scala_version}"
 dependencies {
 	compileOnly "org.apache.spark:spark-core_$scala_version:$spark_version"
 	compileOnly "org.apache.spark:spark-sql_$scala_version:$spark_version"
