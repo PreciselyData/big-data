@@ -27,6 +27,4 @@ The sample computes a geohash value for each location at a geohash precision of 
 The data is then grouped by a common geohash and counted.
 
 ### Multipass Geocoding Sample
-This sample for the Spark Geocoding API in Scala demonstrates how to improve geocoding results by performing multipass geocoding. 
-With multipass geocoding, for all first-pass results with suboptimal precision levels, i.e., any result code less than S5 (street interpolated), 
-a second geocoding pass is run using single line address matching, which may return more accurate geocodes. 
+This sample for the Spark Geocoding API in Scala demonstrates how to improve geocoding results by performing multipass geocoding. With multipass geocoding, for all first-pass results without point-level precision, a second geocoding pass is run using single line address matching, which may return more accurate geocodes. 
