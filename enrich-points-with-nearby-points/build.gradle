@@ -22,18 +22,23 @@ dependencies {
 
 	testImplementation "org.apache.spark:spark-core_$scala_version:$spark_version"
 	testImplementation "org.apache.spark:spark-sql_$scala_version:$spark_version"
-	testImplementation "org.scalatest:scalatest_$scala_version:2.2.6"
-	testImplementation 'junit:junit:4.12'
+	testImplementation "org.scalatest:scalatest_$scala_version:3.2.2"
+	testImplementation "org.scalatest:scalatest-funsuite_$scala_version:3.2.2"
 }
 
-tasks.withType(Test) {
-	//set Hadoop binary lib for windows
+task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
+	main = 'org.scalatest.tools.Runner'
+	args = ['-R', 'build/classes/scala/test', '-o']
+	classpath = sourceSets.test.runtimeClasspath
 	systemProperty "hadoop.home.dir", "${project.rootDir}/hadoop-2.7.1"
 }
+test.dependsOn scalaTest
 
 //task to build jar that can run the verification on a cluster
 task testJar(type: Jar) {
 	archiveClassifier.set('tests-all')
 	from sourceSets.test.output
-	from zipTree(configurations.testRuntimeClasspath.filter {File f -> f.name.contains("scalatest")}.getSingleFile()) //adding scalatest for assertions
+	from zipTree(configurations.testRuntimeClasspath.filter {
+		File f -> f.name.contains("scalatest-core_${scala_version}")
+	}.getSingleFile()) //adding scalatest for assertions
 }

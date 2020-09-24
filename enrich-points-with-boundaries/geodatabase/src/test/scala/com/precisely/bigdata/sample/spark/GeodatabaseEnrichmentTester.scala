@@ -15,12 +15,10 @@ package com.precisely.bigdata.sample.spark
 
 import java.util.logging.{ConsoleHandler, Level, Logger}
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.BeforeAndAfterAll
 
-@RunWith(classOf[JUnitRunner])
-class GeodatabaseEnrichmentTester extends FunSuite with BeforeAndAfterAll {
+class GeodatabaseEnrichmentTester extends AnyFunSuite with BeforeAndAfterAll {
   private val parquetLogger = Logger.getLogger("org.apache.parquet") //holding on to logger to persist log level changes
 
   override def beforeAll() {
