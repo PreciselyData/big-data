@@ -22,8 +22,10 @@ dependencies {
 
 	testImplementation "org.apache.spark:spark-core_$scala_version:$spark_version"
 	testImplementation "org.apache.spark:spark-sql_$scala_version:$spark_version"
-	testImplementation "org.scalatest:scalatest_$scala_version:2.2.6"
-	testImplementation 'junit:junit:4.12'
+	testImplementation "org.scalatest:scalatest_$scala_version:3.2.2"
+	testImplementation "org.scalatest:scalatest-funsuite_$scala_version:3.2.2"
+	testImplementation "org.scalatestplus:junit-4-13_$scala_version:3.2.2.0"
+	testImplementation "junit:junit:4.13"
 	testImplementation "org.apache.commons:commons-lang3:3.4"
 }
 
@@ -36,5 +38,8 @@ tasks.withType(Test) {
 task testJar(type: Jar) {
 	archiveClassifier.set('tests-all')
 	from sourceSets.test.output
-	from zipTree(configurations.testRuntimeClasspath.filter {File f -> f.name.contains("scalatest")}.getSingleFile()) //adding scalatest for assertions
+	//adding scalatest for assertions
+	["scalatest-core_${scala_version}", "scalactic_${scala_version}", "scalatest-compatible"].each { lib ->
+		from zipTree(configurations.testRuntimeClasspath.filter{ it.name.contains(lib) }.getSingleFile())
+	}
 }
