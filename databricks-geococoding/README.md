@@ -28,7 +28,7 @@ You will also need to provide an URL for the location of the spectrum-bigdata-ge
 
 Once those changes have been made you can execute the cell.
 
-After executing Create Geocoding Library & Attach to Cluster cell you will see two jars called out in the results.  You must pick the appropriate version depending on the spark version you are using.  That jar should be added as a library to your cluster https://docs.databricks.com/libraries/index.html.
+<strong> After executing Create Geocoding Library & Attach to Cluster </strong> cell you will see two jars called out in the results.  You must pick the appropriate version depending on the spark version you are using.  That jar should be added as a library to your cluster https://docs.databricks.com/libraries/index.html.
 
 The rest of the cells can be executed in order with no other interaction required.
 
