@@ -2,7 +2,7 @@
 
 # Databricks Geocoding Sample
 This sample for Databricks demonstrates how to install, configure, and execute against the appropriate geocoding spark driver. 
-After cloning or downloading the repo you will have 2 html files to be imported into your workspace https://docs.databricks.com/notebooks/notebooks-manage.html.
+After cloning or downloading the repo you will have 2 html files to be imported into your workspace https://docs.databricks.com/notebooks/notebooks-manage.html.  You will also have /lib/precisely-bigdata-pdx-sdk2.7-full.jar which will need to be added to your Databricks Filestore.
 
 ## Data
 This sample does not include the data, but does show how to integrate with the Precisely Data Experience.  Using your credentials you will be assured to be using the most recent data vintage.  This also expedites the setting up of data on your cluster.
@@ -36,4 +36,7 @@ The rest of the cells can be executed in order with no other interaction require
 ## Executing the Demo
 After all cells of the Installation have completed successfully you can move on to Executing the cells in the Demo workbook.
 For this notebook you may need no alterations.  
+<ol>
+  <li><strong>GeocodingRootDBFS</strong> defaults to /geocoding.  Only change if you did so in the Installation notebook as well</li>
+</ol>
 You should execute each cell in top down order.  You will set up the geocode instance, build a simple table of addresses, and then geocode against them.
