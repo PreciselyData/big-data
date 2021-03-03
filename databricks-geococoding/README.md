@@ -27,10 +27,9 @@ The Configuration and Variables cell builds a shell script to hold values needed
 You will also need to provide the URL for the location of the spectrum-bigdata-geocoding-VERSION.zip. In our example, we have a mocked up presigned URL to an s3 repository.  See these links for information on creating AWS presigned https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html, and for Azure https://docs.microsoft.com/en-us/rest/api/storageservices/Service-SAS-Examples?redirectedfrom=MSDN.  If you prefer, add the spectrum-bigdata-geocoding-VERSION.zip to your dbfs and use a file:/// URL.
 
 Once those changes have been made, you can execute the cell.
+The rest of the cells can be executed in order.
 
-<strong> After executing the Create Geocoding Library & Attach to Cluster </strong> cell, you will see two jars called out in the results.  You must pick the appropriate version depending on the spark version you are using.  That jar should be added as a library to your cluster https://docs.databricks.com/libraries/index.html.
-
-The rest of the cells can be executed in order with no other interaction required.
+<strong> After executing the Create Geocoding Library & Attach to Cluster </strong> cell, you will see two jars called out in the results.  You must pick the appropriate version depending on the spark version you are using.  That jar should be added as a library to your cluster https://docs.databricks.com/libraries/index.html.  The proper version of the jar is... scala 2.11 for Databricks 6, scala 2.12 for Databricks 7
 
 
 ## Executing the Demo
