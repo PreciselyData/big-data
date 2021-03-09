@@ -1,11 +1,11 @@
 ![Precisely](../Precisely_Logo.png)
 
 # Databricks Geocoding Sample
-This sample for Databricks demonstrates how to install, configure, and execute against the appropriate geocoding spark driver. 
-After cloning or downloading the repo, you will have 2 html files to be imported into your workspace https://docs.databricks.com/notebooks/notebooks-manage.html.  You will also have /lib/precisely-bigdata-pdx-sdk2.7-full.jar which will need to be added to your Databricks Filestore.
+This sample for Databricks demonstrates how to install, configure, and execute a geocoding process in Databricks. 
+After cloning or downloading the repo, you will have 2 html files to be imported into your workspace https://docs.databricks.com/notebooks/notebooks-manage.html.  You will also have a jar, /lib/precisely-bigdata-pdx-sdk2.7-full.jar which will need to be added to your Databricks Filestore.
 
 ## Data
-This sample does not include the data, but does show how to integrate with the Precisely Data Experience.  Using your credentials you will be assured to be using the most recent data vintage.  This also expedites the setting up of data on your cluster.
+This sample integrates Databricks with the Precisely Data Experience in order to access and configure your licensed reference data, which is required for running the geocoder.  Using your credentials you will be assured to be using the most recent data vintage.  This also expedites the setting up of data on your cluster.
 
 * **Geocoding Reference Data**: ex: USA-MasterLocationData, USA-TomTom. 
 
