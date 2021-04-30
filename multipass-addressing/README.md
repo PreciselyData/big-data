@@ -1,7 +1,7 @@
 ![Precisely](../Precisely_Logo.png)
 
 # Multipass Addressing Sample
-This sample for the Spark Verify and Geocoding API in Scala demonstrates how to improve geocoding results by performing verify first and then geocoding. With this multipass-addressing, for all first-pass results without point-level precision, a second geocoding pass is run using single line address matching, which may return more accurate geocodes.
+This sample for the Spark Addressing SDK in Scala demonstrates how to improve geocoding results by performing verify first and then geocoding. With this multipass addressing example, for all first-pass results without point-level precision, a second geocoding pass is run using single line address matching, which may increase match rate.
 
 ## Data
 This sample includes the following data located in the `/data` folder:

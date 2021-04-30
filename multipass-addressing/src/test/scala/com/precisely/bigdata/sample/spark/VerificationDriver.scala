@@ -27,7 +27,7 @@ object VerificationDriver {
 
     val resultDataPath = args(0)
 
-    val resultDF = session.read.option("header","true").csv(resultDataPath)
+    val resultDF = session.read.option("header", "true").csv(resultDataPath)
 
     import org.scalatest.Assertions._
     // confirm count of result dataframe

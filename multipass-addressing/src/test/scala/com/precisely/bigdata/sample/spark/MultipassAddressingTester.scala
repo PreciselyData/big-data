@@ -13,12 +13,12 @@
 
 package com.precisely.bigdata.sample.spark
 
-import java.util.logging.{ConsoleHandler, Level, Logger}
-
 import org.junit.runner.RunWith
-import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.BeforeAndAfterAll
+import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.junit.JUnitRunner
+
+import java.util.logging.{ConsoleHandler, Level, Logger}
 
 @RunWith(classOf[JUnitRunner])
 class MultipassAddressingTester extends AnyFunSuite with BeforeAndAfterAll {
@@ -39,10 +39,10 @@ class MultipassAddressingTester extends AnyFunSuite with BeforeAndAfterAll {
   test("Execute sample and assert output") {
     val paths = new Array[String](5)
 
-    paths(0) = "./data/inputData"
-    paths(1) = "./resources"
-    paths(2) = "./data/referenceData"
-    paths(3) = "./build/download"
+    paths(0) = "./resources"
+    paths(1) = "./data/referenceData"
+    paths(2) = "./build/download"
+    paths(3) = "./data/inputData"
     paths(4) = "./build/output"
 
     // Execute our Multipass Geocoding sample

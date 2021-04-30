@@ -16,23 +16,24 @@ package com.precisely.bigdata.sample.spark
 import com.pb.downloadmanager.api.DownloadManagerBuilder
 import com.pb.downloadmanager.api.downloaders.LocalFilePassthroughDownloader
 import com.pb.downloadmanager.api.downloaders.hadoop.{HDFSDownloader, S3Downloader}
-import com.precisely.addressing.v1.model.RequestAddress
+import com.precisely.addressing.v1.model.{PreferencesBuilder, RequestAddress}
 import com.precisely.bigdata.addressing.spark.api.{AddressingBuilder, AddressingExecutor, RequestInput}
-import com.precisely.addressing.v1.model.PreferencesBuilder
 import org.apache.commons.collections.CollectionUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
-import org.apache.spark.sql.functions.{callUDF, col, lit, map}
+import org.apache.spark.sql.functions.{col, lit, map}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
-import java.util.Arrays;
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
+
+import java.util.Arrays
+
 
 object MultipassAddressing {
   def main(args: Array[String]): Unit = {
-    val inputAddressPath = args(0)
-    val resourcesLocation = args(1)
-    val dataLocation = args(2)
-    val downloadLocation = args(3)
+    val resourcesLocation = args(0)
+    val dataLocation = args(1)
+    val downloadLocation = args(2)
+    val inputAddressPath = args(3)
     val outputDirectory = args(4)
 
     val sparkConf = new SparkConf()
@@ -43,9 +44,6 @@ object MultipassAddressing {
 
     // Load the addresses from the csv
     val addressInputDF = AddressInput.open(session, inputAddressPath)
-
-    // set preference to return all fields
-    val prefBuilder = new PreferencesBuilder().withReturnAllInfo(true).build()
 
     val downloadManager = new DownloadManagerBuilder(downloadLocation)
       .addDownloader(new S3Downloader(session.sparkContext.hadoopConfiguration))
@@ -59,13 +57,12 @@ object MultipassAddressing {
       .withDataLocations(dataLocation)
       .withDownloadManager(downloadManager)
       .udfBuilder()
-      .withPreferences(prefBuilder)
       .withOutputFields(
         "location.feature.geometry.coordinates.x as X",
         "location.feature.geometry.coordinates.y as Y",
         "address.formattedStreetAddress as formattedStreetAddress",
         "address.formattedLocationAddress as formattedLocationAddress",
-        "customFields['PRECISION_CODE'] as PRECISIONCODE")
+        "customFields['PRECISION_CODE'] as precisionCode")
       .withErrorField("error")
       .forCustomExecutor(new CustomExecutor())
 
@@ -83,59 +80,82 @@ object MultipassAddressing {
       .persist()
       // Expand the result collection such that each output field is a separate column, including the error field.
       .select("*", "addressing_geocode_result.*").drop("addressing_geocode_result")
-      // Write the dataframe to the specified output folder as parquet file
-      .write.mode(SaveMode.Overwrite).option("header","true").csv(outputDirectory)
+      // Write the dataframe to the specified output folder as csv file
+      .write.mode(SaveMode.Overwrite).option("header", "true").csv(outputDirectory)
   }
 }
 
 /*
  * A custom Executor that contains the logic to perform verify and then multipass geocode
  */
-class CustomExecutor extends com.precisely.bigdata.addressing.spark.api.AddressingExecutor {
+class CustomExecutor extends AddressingExecutor {
 
   import com.precisely.addressing.v1.model.Response
   import com.precisely.addressing.v1.{Addressing, Preferences}
 
-  var relaxedGeocoderPreferences: Preferences = _
+  // set preference to return all fields and Match Mode to Relaxed
+  private val relaxedGeocoderPreferences: Preferences = new PreferencesBuilder()
+    .withReturnAllInfo(true)
+    .withMatchMode("RELAXED")
+    .build()
 
   override def execute(input: RequestInput, preferences: Option[Preferences], addressing: Addressing): Response = {
-    if (relaxedGeocoderPreferences == null) {
-      relaxedGeocoderPreferences = new PreferencesBuilder()
-        .withMatchMode("RELAXED")
-        .build()
-    }
 
     val verifyResult = addressing.verify(input.requestAddress(), preferences.orNull).getResults
     val verifyAddress = verifyResult.get(0).getAddress
-    
-    //  create multiLine request from the result fields obtained from verify api
-    val multiLineRequest: RequestAddress = new RequestAddress()
-    multiLineRequest.setStreet(verifyAddress.getStreet)
-    multiLineRequest.setAddressNumber(verifyAddress.getAddressNumber)
-    multiLineRequest.setAdmin1(verifyAddress.getAdmin1.getLongName)
-    multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
-    multiLineRequest.setCountry(verifyAddress.getCountry.getIsoAlpha3Code)
-    multiLineRequest.setCity(verifyAddress.getCity.getLongName)
-    multiLineRequest.setPostalCode(verifyAddress.getPostalCode)
 
-    val multiLineResponse = addressing.geocode(multiLineRequest, preferences.orNull)
-    val multiLineResult = multiLineResponse.getResults
+    var multiLineRequest: RequestAddress = input.requestAddress()
 
-    if (CollectionUtils.isNotEmpty(multiLineResult) && multiLineResult.get(0).getCustomFields
-      .get("PRECISION_CODE") != null && Seq("S5", "S6", "S7", "S8").contains(multiLineResult
-      .get(0).getCustomFields.get("PRECISION_CODE").slice(0, 2))) {
-      return multiLineResponse
+    var singleLine = input.requestAddress().getStreet + " " +
+      input.requestAddress().getCity + " " +
+      input.requestAddress().getAdmin1 + " " +
+      input.requestAddress().getPostalCode
+
+    if (CollectionUtils.isNotEmpty(verifyResult)) {
+      //  create multiLine request from verify Response
+      multiLineRequest = new RequestAddress()
+      multiLineRequest.setStreet(verifyAddress.getStreet)
+      multiLineRequest.setAddressNumber(verifyAddress.getAddressNumber)
+      multiLineRequest.setAdmin1(verifyAddress.getAdmin1.getLongName)
+      multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
+      multiLineRequest.setCountry(verifyAddress.getCountry.getIsoAlpha3Code)
+      multiLineRequest.setCity(verifyAddress.getCity.getLongName)
+      multiLineRequest.setPostalCode(verifyAddress.getPostalCode)
+
+      // create singleline request from verify Response
+      singleLine = verifyAddress.getFormattedAddress + " " + verifyAddress.getCountry.getIsoAlpha3Code
     }
 
-    //  create singleline request from multiLine Response
-    val singleLine = verifyAddress.getFormattedAddress + " " + verifyAddress.getCountry.getIsoAlpha3Code
-    val singleLineRequest: RequestAddress = new RequestAddress();
+    val multiLineResponse = addressing.geocode(multiLineRequest, relaxedGeocoderPreferences)
+    val multiLineResult = multiLineResponse.getResults
+
+    if (CollectionUtils.isNotEmpty(multiLineResult) && multiLineResult.get(0).getLocation.getExplanation.getType != null) {
+      if ("ADDRESS_POINT".equals(multiLineResult.get(0).getLocation.getExplanation.getType.label)) {
+        return multiLineResponse
+      }
+    }
+
+    val singleLineRequest: RequestAddress = new RequestAddress()
     singleLineRequest.setAddressLines(Arrays.asList(singleLine))
 
-    val singleLineResult = addressing.geocode(singleLineRequest, relaxedGeocoderPreferences)
-    singleLineResult
+    val singleLineResponse = addressing.geocode(singleLineRequest, relaxedGeocoderPreferences)
+    val singleLineResult = singleLineResponse.getResults
+
+    if (CollectionUtils.isNotEmpty(singleLineResult) && singleLineResult.get(0).getLocation.getExplanation.getType != null) {
+      if ("ADDRESS_POINT".equals(singleLineResult.get(0).getLocation.getExplanation.getType.label)) {
+        return singleLineResponse
+      }
+    }
+    if (CollectionUtils.isNotEmpty(singleLineResult) && CollectionUtils.isNotEmpty(multiLineResult)) {
+      if (multiLineResult.get(0).getScore > singleLineResult.get(0).getScore) {
+        return multiLineResponse
+      }
+    }
+
+    singleLineResponse
   }
 }
+
 
 object AddressInput {
   // set these parameters according to the CSV
