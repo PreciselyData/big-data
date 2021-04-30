@@ -38,7 +38,8 @@ val SDM_GEOCODING_SPDS = Array(
 
 // Local Environment Setup - The remaining lines should not need to be modified
 val DBFS_BASE_LOCATION = s"$GeocodingRootDBFS"
-val DBFS_SDK_LOCATION = s"$DBFS_BASE_LOCATION/sdk"
+val DBFS_SDK_EXTRACT_LOCATION = s"$DBFS_BASE_LOCATION/sdk"
+val DBFS_SDK_LOCATION = s"$DBFS_SDK_EXTRACT_LOCATION/spectrum-bigdata-geocoding*"
 val DBFS_DATA_LOCATION = s"$DBFS_BASE_LOCATION/data"
 
 val LOCAL_DATA_TMP = s"$DBFS_BASE_LOCATION/tmp/data"
@@ -55,6 +56,7 @@ export PB_API_KEY=$PB_API_KEY
 export PB_SECRET=$PB_SECRET
 export DATA_VINTAGE=$DATA_VINTAGE
 export DATA_RELEASE_DATE=$DATA_RELEASE_DATE
+export DBFS_SDK_EXTRACT_LOCATION=/dbfs$DBFS_SDK_EXTRACT_LOCATION
 export DBFS_SDK_LOCATION=/dbfs$DBFS_SDK_LOCATION
 export DBFS_DATA_LOCATION=/dbfs$DBFS_DATA_LOCATION
 export LOCAL_DATA_TMP=$LOCAL_DATA_TMP
@@ -76,19 +78,13 @@ export GEOCODING_SPDS=( ${SDM_GEOCODING_SPDS.map(spd => s"${'"'}$spd${'"'}").mkS
 // DBTITLE 1,Install SDK to DBFS
 // MAGIC %sh . /dbricks_env.sh
 // MAGIC 
-// MAGIC mkdir -p $DBFS_SDK_LOCATION
+// MAGIC mkdir -p DBFS_SDK_EXTRACT_LOCATION
 // MAGIC 
 // MAGIC if [ ! -z "$SDK_URL" ]
 // MAGIC then
 // MAGIC   echo "Installing geocoding SDK..."
-// MAGIC   if [[ "$SDK_URL" == http* ]]
-// MAGIC   then
-// MAGIC      echo $SDK_URL
-// MAGIC      curl -o geocoding-sdk.zip "$SDK_URL"
-// MAGIC      unzip -d $DBFS_SDK_LOCATION geocoding-sdk.zip
-// MAGIC   else
-// MAGIC      unzip -d $DBFS_SDK_LOCATION $SDK_URL
-// MAGIC   fi
+// MAGIC   curl -o geocoding-sdk.zip "$SDK_URL"
+// MAGIC   unzip -d $DBFS_SDK_EXTRACT_LOCATION geocoding-sdk.zip
 // MAGIC else
 // MAGIC   echo "Not installing geocoding SDK"
 // MAGIC fi
@@ -111,19 +107,6 @@ export GEOCODING_SPDS=( ${SDM_GEOCODING_SPDS.map(spd => s"${'"'}$spd${'"'}").mkS
 // MAGIC 
 // MAGIC mkdir -p $DBFS_DATA_LOCATION
 // MAGIC $DBFS_SDK_LOCATION/cli/cli.sh extract --s $LOCAL_DATA_ZIPPED --d $DBFS_DATA_LOCATION --t 4
-
-// COMMAND ----------
-
-// MAGIC %md ## Configure the Geocoder
-
-// COMMAND ----------
-
-// DBTITLE 1,Configure Geocoder
-// MAGIC %sh . /dbricks_env.sh
-// MAGIC 
-// MAGIC (cd $DBFS_SDK_LOCATION/cli; sh ./cli.sh configure --s $DBFS_DATA_LOCATION --d $DBFS_SDK_LOCATION/resources/config)
-// MAGIC echo Using Config: $DBFS_SDK_LOCATION/resources/config/JsonDataConfig.json 
-// MAGIC cat $DBFS_SDK_LOCATION/resources/config/JsonDataConfig.json
 
 // COMMAND ----------
 

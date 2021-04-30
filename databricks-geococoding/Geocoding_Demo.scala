@@ -14,8 +14,6 @@ val GeocodingRootDBFS = "/geocoding"
 val PreferencesFileDBFS = s"$GeocodingRootDBFS/geocodePreferences.xml"
 
 // These should not need to be modified
-val ResourcesLocationDBFS = s"$GeocodingRootDBFS/sdk/resources/"
-val ResourcesLocationLocal = s"/dbfs$ResourcesLocationDBFS"
 val PreferencesFileLocal = s"/dbfs$PreferencesFileDBFS"
 val DataLocationLocal = s"/dbfs/$GeocodingRootDBFS/data"
 
@@ -181,6 +179,12 @@ dbutils.fs.head(PreferencesFileDBFS, 1024*1024*10)
 // DBTITLE 1,Register Geocode Function
 import com.pb.bigdata.geocoding.spark.api.GeocodeUDFBuilder
 import org.apache.spark.sql.functions._
+import java.io.File
+
+def getListOfSubDirectories(dir: File): List[String] = dir.listFiles.filter(_.isDirectory).map(_.getName).toList
+val subFolders = getListOfSubDirectories(new File(s"/dbfs$GeocodingRootDBFS/sdk"))
+val ResourcesLocationLocal = s"/dbfs$GeocodingRootDBFS/sdk/" + subFolders.filter(_.startsWith("spectrum-bigdata-geocoding"))(0) + "/resources/"
+
 GeocodeUDFBuilder.singleCandidateUDFBuilder()
 				.withResourcesLocation(ResourcesLocationLocal)
                 .withDataLocations(DataLocationLocal)
