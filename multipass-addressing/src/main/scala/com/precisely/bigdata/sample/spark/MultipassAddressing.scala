@@ -129,6 +129,7 @@ class CustomExecutor extends AddressingExecutor {
     val multiLineResponse = addressing.geocode(multiLineRequest, relaxedGeocoderPreferences)
     val multiLineResult = multiLineResponse.getResults
 
+    //TODO remove multiLineResult.get(0).getLocation.getExplanation.getType != null check once Bug GN-4279 is fixed
     if (CollectionUtils.isNotEmpty(multiLineResult) && multiLineResult.get(0).getLocation.getExplanation.getType != null) {
       if ("ADDRESS_POINT".equals(multiLineResult.get(0).getLocation.getExplanation.getType.label)) {
         return multiLineResponse
@@ -141,6 +142,7 @@ class CustomExecutor extends AddressingExecutor {
     val singleLineResponse = addressing.geocode(singleLineRequest, relaxedGeocoderPreferences)
     val singleLineResult = singleLineResponse.getResults
 
+    //TODO remove singleLineResult.get(0).getLocation.getExplanation.getType != null check once Bug GN-4279 is fixed
     if (CollectionUtils.isNotEmpty(singleLineResult) && singleLineResult.get(0).getLocation.getExplanation.getType != null) {
       if ("ADDRESS_POINT".equals(singleLineResult.get(0).getLocation.getExplanation.getType.label)) {
         return singleLineResponse
