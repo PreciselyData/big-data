@@ -25,7 +25,7 @@ import org.apache.spark.sql.functions.{col, lit, map}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-import java.util.Arrays
+import java.util.Collections
 
 
 object MultipassAddressing {
@@ -101,8 +101,7 @@ class CustomExecutor extends AddressingExecutor {
 
   override def execute(input: RequestInput, preferences: Option[Preferences], addressing: Addressing): Response = {
 
-    val verifyResult = addressing.verify(input.requestAddress(), preferences.orNull).getResults
-    val verifyAddress = verifyResult.get(0).getAddress
+    val verifyResponse = addressing.verify(input.requestAddress(), preferences.orNull)
 
     var multiLineRequest: RequestAddress = input.requestAddress()
 
@@ -111,7 +110,8 @@ class CustomExecutor extends AddressingExecutor {
       input.requestAddress().getAdmin1 + " " +
       input.requestAddress().getPostalCode
 
-    if (CollectionUtils.isNotEmpty(verifyResult)) {
+    if (CollectionUtils.isNotEmpty(verifyResponse.getResults)) {
+      val verifyAddress = verifyResponse.getResults.get(0).getAddress
       //  create multiLine request from verify Response
       multiLineRequest = new RequestAddress()
       multiLineRequest.setStreet(verifyAddress.getStreet)
@@ -127,34 +127,33 @@ class CustomExecutor extends AddressingExecutor {
     }
 
     val multiLineResponse = addressing.geocode(multiLineRequest, relaxedGeocoderPreferences)
-    val multiLineResult = multiLineResponse.getResults
 
     //TODO remove multiLineResult.get(0).getLocation.getExplanation.getType != null check once Bug GN-4279 is fixed
-    if (CollectionUtils.isNotEmpty(multiLineResult) && multiLineResult.get(0).getLocation.getExplanation.getType != null) {
-      if ("ADDRESS_POINT".equals(multiLineResult.get(0).getLocation.getExplanation.getType.label)) {
+    if (CollectionUtils.isNotEmpty(multiLineResponse.getResults) &&
+      multiLineResponse.getResults.get(0).getLocation.getExplanation.getType != null) {
+      if ("ADDRESS_POINT".equals(multiLineResponse.getResults.get(0).getLocation.getExplanation.getType.label)) {
         return multiLineResponse
       }
     }
 
     val singleLineRequest: RequestAddress = new RequestAddress()
-    singleLineRequest.setAddressLines(Arrays.asList(singleLine))
+    singleLineRequest.setAddressLines(Collections.singletonList(singleLine))
 
     val singleLineResponse = addressing.geocode(singleLineRequest, relaxedGeocoderPreferences)
-    val singleLineResult = singleLineResponse.getResults
 
     //TODO remove singleLineResult.get(0).getLocation.getExplanation.getType != null check once Bug GN-4279 is fixed
-    if (CollectionUtils.isNotEmpty(singleLineResult) && singleLineResult.get(0).getLocation.getExplanation.getType != null) {
-      if ("ADDRESS_POINT".equals(singleLineResult.get(0).getLocation.getExplanation.getType.label)) {
+    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && singleLineResponse.getResults.get(0).getLocation.getExplanation.getType != null) {
+      if ("ADDRESS_POINT".equals(singleLineResponse.getResults.get(0).getLocation.getExplanation.getType.label)) {
         return singleLineResponse
       }
     }
-    if (CollectionUtils.isNotEmpty(singleLineResult) && CollectionUtils.isNotEmpty(multiLineResult)) {
-      if (multiLineResult.get(0).getScore > singleLineResult.get(0).getScore) {
+    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && CollectionUtils.isNotEmpty(multiLineResponse.getResults)) {
+      if (multiLineResponse.getResults.get(0).getScore > singleLineResponse.getResults.get(0).getScore) {
         return multiLineResponse
       }
     }
+    if (singleLineResponse != null) singleLineResponse else multiLineResponse
 
-    singleLineResponse
   }
 }
 
