@@ -128,12 +128,8 @@ class CustomExecutor extends AddressingExecutor {
 
     val multiLineResponse = addressing.geocode(multiLineRequest, relaxedGeocoderPreferences)
 
-    //TODO remove multiLineResult.get(0).getLocation.getExplanation.getType != null check once Bug GN-4279 is fixed
-    if (CollectionUtils.isNotEmpty(multiLineResponse.getResults) &&
-      multiLineResponse.getResults.get(0).getLocation.getExplanation.getType != null) {
-      if ("ADDRESS_POINT".equals(multiLineResponse.getResults.get(0).getLocation.getExplanation.getType.label)) {
-        return multiLineResponse
-      }
+    if (CollectionUtils.isNotEmpty(multiLineResponse.getResults) && isAddressLevelMatch(multiLineResponse).getOrElse(false)) {
+      return multiLineResponse
     }
 
     val singleLineRequest: RequestAddress = new RequestAddress()
@@ -141,19 +137,24 @@ class CustomExecutor extends AddressingExecutor {
 
     val singleLineResponse = addressing.geocode(singleLineRequest, relaxedGeocoderPreferences)
 
-    //TODO remove singleLineResult.get(0).getLocation.getExplanation.getType != null check once Bug GN-4279 is fixed
-    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && singleLineResponse.getResults.get(0).getLocation.getExplanation.getType != null) {
-      if ("ADDRESS_POINT".equals(singleLineResponse.getResults.get(0).getLocation.getExplanation.getType.label)) {
-        return singleLineResponse
-      }
+    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && isAddressLevelMatch(multiLineResponse).getOrElse(false)) {
+      return singleLineResponse
     }
-    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && CollectionUtils.isNotEmpty(multiLineResponse.getResults)) {
-      if (multiLineResponse.getResults.get(0).getScore > singleLineResponse.getResults.get(0).getScore) {
-        return multiLineResponse
-      }
+
+    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && CollectionUtils.isNotEmpty(multiLineResponse.getResults) &&
+      multiLineResponse.getResults.get(0).getScore > singleLineResponse.getResults.get(0).getScore) {
+      return multiLineResponse
     }
+
     if (singleLineResponse != null) singleLineResponse else multiLineResponse
 
+  }
+
+  def isAddressLevelMatch(response: Response): Option[Boolean] = {
+    if ("ADDRESS".equals(response.getResults.get(0).getExplanation.getAddressMatch.getType.label) && response.getResults.get(0).getScore >= 90) {
+      return Option(true)
+    }
+    Option(false)
   }
 }
 
