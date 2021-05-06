@@ -42,7 +42,7 @@ To execute the sample on a cluster, complete the following steps on your Hadoop 
    directory is used to locally download and cache the geocoding datasets.
 1. Execute a spark job on the cluster.
    ```sh
-   spark-submit --class com.precisely.bigdata.sample.spark.MultipassAddressing --master yarn --deploy-mode cluster --jars <localDirectory>/lib/spectrum-bigdata-addressing-sdk-spark2-<version>.jar <localDirectory>/lib/multipass-addressing-<version>.jar hdfs:///<hdfsDirectory>/input/addresses.csv hdfs:///<hdfsDirectory>/resources hdfs:///<hdfsDirectory>/data/referenceData <localDirectory>/downloads hdfs:///<hdfsDirectory>/output
+   spark-submit --class com.precisely.bigdata.sample.spark.MultipassAddressing --master yarn --deploy-mode cluster --jars <localDirectory>/lib/spectrum-bigdata-addressing-sdk-spark2-<version>.jar <localDirectory>/lib/multipass-addressing-<version>.jar hdfs:///<hdfsDirectory>/resources hdfs:///<hdfsDirectory>/data/referenceData <localDirectory>/downloads hdfs:///<hdfsDirectory>/input/addresses.csv hdfs:///<hdfsDirectory>/output
     ```
 
 ## Hadoop libraries

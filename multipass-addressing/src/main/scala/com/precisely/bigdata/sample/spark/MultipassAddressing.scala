@@ -128,7 +128,7 @@ class CustomExecutor extends AddressingExecutor {
 
     val multiLineResponse = addressing.geocode(multiLineRequest, relaxedGeocoderPreferences)
 
-    if (CollectionUtils.isNotEmpty(multiLineResponse.getResults) && isAddressLevelMatch(multiLineResponse).getOrElse(false)) {
+    if (CollectionUtils.isNotEmpty(multiLineResponse.getResults) && isAddressLevelMatch(multiLineResponse)) {
       return multiLineResponse
     }
 
@@ -137,7 +137,7 @@ class CustomExecutor extends AddressingExecutor {
 
     val singleLineResponse = addressing.geocode(singleLineRequest, relaxedGeocoderPreferences)
 
-    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && isAddressLevelMatch(multiLineResponse).getOrElse(false)) {
+    if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && isAddressLevelMatch(multiLineResponse)) {
       return singleLineResponse
     }
 
@@ -150,11 +150,11 @@ class CustomExecutor extends AddressingExecutor {
 
   }
 
-  def isAddressLevelMatch(response: Response): Option[Boolean] = {
+  def isAddressLevelMatch(response: Response): Boolean = {
     if ("ADDRESS".equals(response.getResults.get(0).getExplanation.getAddressMatch.getType.label) && response.getResults.get(0).getScore >= 90) {
-      return Option(true)
+      return true
     }
-    Option(false)
+    false
   }
 }
 
