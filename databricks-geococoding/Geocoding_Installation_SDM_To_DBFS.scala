@@ -78,7 +78,7 @@ export GEOCODING_SPDS=( ${SDM_GEOCODING_SPDS.map(spd => s"${'"'}$spd${'"'}").mkS
 // DBTITLE 1,Install SDK to DBFS
 // MAGIC %sh . /dbricks_env.sh
 // MAGIC 
-// MAGIC mkdir -p DBFS_SDK_EXTRACT_LOCATION
+// MAGIC mkdir -p $DBFS_SDK_EXTRACT_LOCATION
 // MAGIC 
 // MAGIC if [ ! -z "$SDK_URL" ]
 // MAGIC then
