@@ -19,8 +19,8 @@ The Geocoding Installation notebook contains the commands necessary to install t
 The Configuration and Variables cell builds a shell script to hold values needed by the other cells. This will be the main cell that will require your edits.
 <ol>
   <li><strong>SDM_CLASSPATH</strong> to the FileStore location of the precisely-bigdata-pdx-sdk2.7-full.jar</li>
-  <li><strong>PB_API_KEY</strong> to the DataExperience API key from above</li>
-  <li><strong>PB_SECRET</strong> to the DataExperience Secret key from above</li>
+  <li><strong>PDX_API_KEY</strong> to the DataExperience API key from above</li>
+  <li><strong>PDX_SECRET</strong> to the DataExperience Secret key from above</li>
   <li><strong>SDK_URL</strong> the Spectrum Geocoding for Big Data product distribution, e.g <b>sbg500F01.zip</b>, where 50 is version 5.0.</li>
 </ol>
 
