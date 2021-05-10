@@ -19,12 +19,12 @@ The Geocoding Installation notebook contains the commands necessary to install t
 The Configuration and Variables cell builds a shell script to hold values needed by the other cells. This will be the main cell that will require your edits.
 <ol>
   <li><strong>SDM_CLASSPATH</strong> to the FileStore location of the precisely-bigdata-pdx-sdk2.7-full.jar</li>
-  <li><strong>PB_API_KEY</strong> to the DataExperience API key from above</li>
-  <li><strong>PB_SECRET</strong> to the DataExperience Secret key from above</li>
-  <li><strong>SDK_URL</strong> to any valid/accessible URL location of the spectrum-bigdata-geocoding-VERSION.zip</li>
+  <li><strong>PDX_API_KEY</strong> to the DataExperience API key from above</li>
+  <li><strong>PDX_SECRET</strong> to the DataExperience Secret key from above</li>
+  <li><strong>SDK_URL</strong> the Spectrum Geocoding for Big Data product distribution, e.g <b>sbg500F01.zip</b>, where 50 is version 5.0.</li>
 </ol>
 
-You will also need to provide the URL for the location of the spectrum-bigdata-geocoding-VERSION.zip. In our example, we have a mocked up presigned URL to an s3 repository.  See these links for information on creating AWS presigned https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html, and for Azure https://docs.microsoft.com/en-us/rest/api/storageservices/Service-SAS-Examples?redirectedfrom=MSDN.  If you prefer, add the spectrum-bigdata-geocoding-VERSION.zip to your dbfs and use a file:/// URL.
+You will also need to provide the URL for the location of the Spectrum Geocoding for Big Data product distribution. You should be able to find this URL in your product delivery email from Precisely.  See these links for information on creating AWS presigned https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html , and for Azure https://docs.microsoft.com/en-us/rest/api/storageservices/Service-SAS-Examples?redirectedfrom=MSDN .  If you prefer, you may manually copy the product distribution to your dbfs and use a file:///dbfs/<path_on_dbfs> URL.
 
 Once those changes have been made, you can execute the cell.
 The rest of the cells can be executed in order.
