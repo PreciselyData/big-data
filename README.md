@@ -31,3 +31,6 @@ This sample for the Spark Geocoding API in Scala demonstrates how to improve geo
 
 ### Databricks Geocoding Sample
 This sample demonstrates setting up geocoding on a databricks cluster. 
+
+### Multipass Addressing Sample
+This sample for the Spark Addressing SDK in Scala demonstrates how to improve geocoding results by performing verify first and then geocoding. With this multipass addressing example, for all results without address level precision, a second geocoding pass is run using single line input address, which may increase match rate.
