@@ -11,7 +11,8 @@ This sample includes the following data located in the `/data` folder:
 
 ## Building the sample
 1. Download the Spectrum Addressing for Big Data distribution and extract the contents.
-1. Place the _spectrum-bigdata-addressing-sdk-spark2-&lt;version&gt;.jar_ into the `/lib` directory of this sample.
+1. Place the _spectrum-bigdata-addressing-sdk-spark2-&lt;version&gt;.jar_ into the `/lib` directory of this sample and 
+   uncomment the corresponding scala version in `/build.gradle`.
 1. Place the contents of the `/resources` directory into the `/resources` directory of this sample.
 1. Place the `/sampleData/DC/sampleDictionary` directory into the `/data/referenceData` directory of this sample.
 1. Use the following command from the root of the sample to build:
