@@ -26,6 +26,7 @@ import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 import java.util.{ArrayList, Collections, List}
+import scala.collection.JavaConversions._
 
 
 object MultipassAddressing {
@@ -74,7 +75,8 @@ object MultipassAddressing {
         lit("addressLines[0]"), col("streetName"),
         lit("city"), col("city"),
         lit("admin1"), col("state"),
-        lit("postalCode"), col("zip")))
+        lit("postalCode"), col("zip"),
+        lit("country"), lit("USA")))
       )
       // Persist the addressing result to avoid recalculation when we expand the result
       .persist()
@@ -101,54 +103,63 @@ class CustomExecutor extends AddressingExecutor {
 
   override def execute(input: RequestInput, preferences: Option[Preferences], addressing: Addressing): Response = {
 
-    val verifyResponse = addressing.verify(input.requestAddress(), preferences.orNull)
-
+    // get the request address represented by this record in the dataframe
     val inputRequest: RequestAddress = input.requestAddress()
 
+    // perform the verify operation
+    val verifyResponse = addressing.verify(inputRequest, preferences.orNull)
+
+    // default input for the initial geocode should be the original user specified address to handle the case where verify returns no result
     var multiLineRequest: RequestAddress = inputRequest
 
     if (CollectionUtils.isNotEmpty(verifyResponse.getResults)) {
       val verifyAddress = verifyResponse.getResults.get(0).getAddress
-
       //  create multiLine request from verify Response
       multiLineRequest = new RequestAddress()
-      multiLineRequest.setAddressLines(getValidAddressLine(verifyResponse.getResults.get(0).getAddressLines))
-      multiLineRequest.setStreet(verifyAddress.getStreet)
+      multiLineRequest.setAddressLines(getMainAddressLines(verifyResponse.getResults.get(0).getAddressLines))
       multiLineRequest.setAddressNumber(verifyAddress.getAddressNumber)
+      multiLineRequest.setStreet(verifyAddress.getStreet)
+      multiLineRequest.setAdmin1(verifyAddress.getAdmin1.getLongName)
+      multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
       multiLineRequest.setCity(verifyAddress.getCity.getLongName)
       multiLineRequest.setPostalCode(verifyAddress.getPostalCode)
       multiLineRequest.setCountry(verifyAddress.getCountry.getIsoAlpha3Code)
 
     }
 
+    // Perform the geocode and return the result if it passes our acceptance criteria
     val multiLineResponse = addressing.geocode(multiLineRequest, relaxedGeocoderPreferences)
     if (CollectionUtils.isNotEmpty(multiLineResponse.getResults) && isAddressLevelMatch(multiLineResponse.getResults.get(0))) {
       return multiLineResponse
     }
 
-    val singleLine: String = if (CollectionUtils.isNotEmpty(verifyResponse.getResults)) {
-      for (addressLine <- 0 to getValidAddressLine(verifyResponse.getResults.get(0).getAddressLines).size() - 1) {
-        verifyResponse.getResults.get(0).getAddressLines.get(addressLine) + " "
-      }
-      verifyResponse.getResults.get(0).getAddress.getFormattedAddress + " " + verifyResponse.getResults.get(0).getAddress.getCountry.getIsoAlpha3Code
+    // build a single line version of the address for the second pass of geocoding, based on the verified address or the input
+    val singleLineRequest: RequestAddress = new RequestAddress()
+    if (CollectionUtils.isNotEmpty(verifyResponse.getResults)) {
+      val verifyAddress = verifyResponse.getResults.get(0).getAddress
+      singleLineRequest.setAddressLines(Collections.singletonList(verifyAddress.getFormattedAddress))
+      singleLineRequest.setCountry(verifyAddress.getCountry.getIsoAlpha3Code)
     } else {
-      inputRequest.getStreet + " " +
-        inputRequest.getCity + " " +
-        inputRequest.getAdmin1 + " " +
-        inputRequest.getPostalCode
+      singleLineRequest.setAddressLines(Collections.singletonList(
+        inputRequest.getStreet + " " +
+          inputRequest.getCity + " " +
+          inputRequest.getAdmin1 + " " +
+          inputRequest.getPostalCode
+      ))
+      singleLineRequest.setCountry(inputRequest.getCountry)
     }
 
-    val singleLineRequest: RequestAddress = new RequestAddress()
-    singleLineRequest.setAddressLines(Collections.singletonList(singleLine))
-
+    // Perform the single line geocode and return the result if it passes our acceptance criteria
     val singleLineResponse = addressing.geocode(singleLineRequest, relaxedGeocoderPreferences)
     if (CollectionUtils.isNotEmpty(singleLineResponse.getResults) && isAddressLevelMatch(singleLineResponse.getResults.get(0))) {
       return singleLineResponse
     }
 
+    // neither address passed our initial acceptance criteria... pick the best response
     if (CollectionUtils.isNotEmpty(multiLineResponse.getResults)) {
+      // Return the single line response only if it is better than the multi line response
       if (CollectionUtils.isNotEmpty(singleLineResponse.getResults)
-        && singleLineResponse.getResults.get(0).getScore >= multiLineResponse.getResults.get(0).getScore) {
+        && singleLineResponse.getResults.get(0).getScore > multiLineResponse.getResults.get(0).getScore) {
         return singleLineResponse
       }
       multiLineResponse
@@ -157,24 +168,16 @@ class CustomExecutor extends AddressingExecutor {
     }
   }
 
-  def isAddressLevelMatch(result: Result): Boolean = {
-    if ("ADDRESS".equals(result.getExplanation.getAddressMatch.getType.label) && result.getScore >= 90) {
-      return true
-    }
-    false
+  def isAddressLevelMatch(result: Result): Boolean =
+    result.getScore >= 90 && "ADDRESS".equals(result.getExplanation.getAddressMatch.getType.label)
+
+  def getMainAddressLines(addressLines: List[String]): List[String] = {
+    val mainAddressLine = new ArrayList[String]()
+    mainAddressLine.addAll(addressLines.dropRight(1).filter(_.nonEmpty))
+    mainAddressLine
   }
 
-  def getValidAddressLine(addressLines: List[String]): List[String] = {
-    val blankLines = new ArrayList[String]()
-    blankLines.add("")
-    addressLines.removeAll(blankLines)
-    if (addressLines.size() > 1) {
-      addressLines.subList(0, addressLines.size() - 1)
-    }
-    addressLines
-  }
 }
-
 
 object AddressInput {
   // set these parameters according to the CSV
