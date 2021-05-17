@@ -117,8 +117,6 @@ class CustomExecutor extends AddressingExecutor {
       //  create multiLine request from verify Response
       multiLineRequest = new RequestAddress()
       multiLineRequest.setAddressLines(getMainAddressLines(verifyResponse.getResults.get(0).getAddressLines))
-      multiLineRequest.setAddressNumber(verifyAddress.getAddressNumber)
-      multiLineRequest.setStreet(verifyAddress.getStreet)
       multiLineRequest.setAdmin1(verifyAddress.getAdmin1.getLongName)
       multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
       multiLineRequest.setCity(verifyAddress.getCity.getLongName)
@@ -173,7 +171,7 @@ class CustomExecutor extends AddressingExecutor {
 
   def getMainAddressLines(addressLines: List[String]): List[String] = {
     val mainAddressLine = new ArrayList[String]()
-    mainAddressLine.addAll(addressLines.dropRight(1).filter(_.nonEmpty))
+    mainAddressLine.addAll(addressLines.filter(_.nonEmpty).dropRight(1))
     mainAddressLine
   }
 
