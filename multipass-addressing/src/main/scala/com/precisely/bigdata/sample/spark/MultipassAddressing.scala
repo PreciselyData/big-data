@@ -36,12 +36,27 @@ object MultipassAddressing {
     val downloadLocation = args(2)
     val inputAddressPath = args(3)
     val outputDirectory = args(4)
+    val sparkMajorVersion = null
+    try{
+      val res=org.apache.spark.SPARK_VERSION split '=' head parseInt
+      val rep=res split '.' head
+      sparkMajorVersion= rep.toInt
 
+    }catch {
+      case ex:Exception => {
+        println("Exception during Spark Version detection " + ex)
+      }
+      case ex: Throwable =>println("Found a unknown exception"+ ex)
+    }
     val sparkConf = new SparkConf()
     sparkConf.setIfMissing("spark.master", "local[*]")
     val session = SparkSession.builder()
       .config(sparkConf)
       .getOrCreate()
+    if(sparkMajorVersion == 3){
+      session.conf.set("spark.sql.legacy.allowUntypedScalaUDF",true);
+      println("Detected Spark Major version as 3. Therefore setting the flag");
+    }
 
     // Load the addresses from the csv
     val addressInputDF = AddressInput.open(session, inputAddressPath)
