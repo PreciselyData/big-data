@@ -38,7 +38,7 @@ object MultipassAddressing {
     val outputDirectory = args(4)
     val sparkMajorVersion = null
     try{
-      val res=org.apache.spark.SPARK_VERSION split '=' head parseInt
+      val res=org.apache.spark.SPARK_VERSION split '=' head
       val rep=res split '.' head
       sparkMajorVersion= rep.toInt
 
