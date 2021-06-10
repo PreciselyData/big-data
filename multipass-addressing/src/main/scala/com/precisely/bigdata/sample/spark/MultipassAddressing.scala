@@ -36,7 +36,7 @@ object MultipassAddressing {
     val downloadLocation = args(2)
     val inputAddressPath = args(3)
     val outputDirectory = args(4)
-    val sparkMajorVersion = 2
+    var sparkMajorVersion = 2
     try{
       
       sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
