@@ -46,6 +46,7 @@ object MultipassAddressing {
     }
     val session = SparkSession.builder()
       .config(sparkConf)
+      .config("spark.sql.legacy.allowUntypedScalaUDF",true)
       .getOrCreate()
 
 
