@@ -37,10 +37,8 @@ object MultipassAddressing {
     val inputAddressPath = args(3)
     val outputDirectory = args(4)
     val sparkConf = new SparkConf()
-    var sparkMajorVersion = 2
-
-    sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
     sparkConf.setIfMissing("spark.master", "local[*]")
+    var sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
     if(sparkMajorVersion >= 3){
       sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
     }

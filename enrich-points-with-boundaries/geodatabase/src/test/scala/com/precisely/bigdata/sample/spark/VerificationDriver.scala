@@ -21,8 +21,8 @@ object VerificationDriver {
     val sparkConf = new SparkConf()
     sparkConf.setIfMissing("spark.master", "local[*]")
     sparkConf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
-    var sparkMajorVersion = 2
-    sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
+
+    var sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
     if(sparkMajorVersion >= 3){
       sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
     }
