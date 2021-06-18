@@ -27,7 +27,6 @@ object VerificationDriver {
     }
     val session = SparkSession.builder()
       .config(sparkConf)
-      .config("spark.sql.legacy.allowUntypedScalaUDF",true)
       .getOrCreate()
     val resultDataPath = args(0)
 
