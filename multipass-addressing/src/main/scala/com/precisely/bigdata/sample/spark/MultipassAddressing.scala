@@ -42,7 +42,7 @@ object MultipassAddressing {
     if(sparkMajorVersion >= 3){
       // Set this variable only for Spark version 3.0.x only
       var sparkMinorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(1).toInt
-      if(sparkMajorVersion == 3 and sparkMinorVersion == 0){
+      if(sparkMajorVersion == 3 && sparkMinorVersion == 0){
         sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
       }
 
