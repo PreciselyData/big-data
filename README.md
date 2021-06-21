@@ -3,9 +3,7 @@
 # Samples
 
 A collection of samples demonstrating how to use Spectrum Spatial for Big Data.
-
-### Support for Spark 3
-This sample supports till Spark 3.0.2. For version higher than Spark 3.1.x onwards, please contact precisely for any details.
+This sample supports till Spark 3.0.2.
 
 ### Enrichment Sample using Boundaries
 This sample demonstrates how to use Spark to enrich a CSV containing point data with attributes from a spatial file based on 
