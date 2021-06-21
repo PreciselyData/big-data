@@ -40,7 +40,11 @@ object TABEnrichmentWithSchema {
     val sparkConf = new SparkConf().setIfMissing("spark.master", "local[*]")
     var sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
     if(sparkMajorVersion >= 3){
-      sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
+      var sparkMinorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(1).toInt
+      if(sparkMajorVersion == 3 && sparkMinorVersion == 0){
+        sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
+      }
+
     }
     val spark = SparkSession.builder().config(sparkConf).getOrCreate()
 

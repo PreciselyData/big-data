@@ -23,7 +23,6 @@ object VerificationDriver {
     sparkConf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
     var sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
     if(sparkMajorVersion >= 3){
-      // Set this variable only for Spark version 3.0.x only
       var sparkMinorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(1).toInt
       if(sparkMajorVersion == 3 && sparkMinorVersion == 0){
         sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
