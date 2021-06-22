@@ -38,9 +38,9 @@ object TABEnrichmentWithSchema {
     val downloadLocation = args(3)
 
     val sparkConf = new SparkConf().setIfMissing("spark.master", "local[*]")
-    var sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
+    val sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
     if(sparkMajorVersion >= 3){
-      var sparkMinorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(1).toInt
+      val sparkMinorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(1).toInt
       if(sparkMajorVersion == 3 && sparkMinorVersion == 0){
         sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
       }
