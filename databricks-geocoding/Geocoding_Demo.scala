@@ -14,8 +14,10 @@ val GeocodingRootDBFS = "/geocoding"
 val PreferencesFileDBFS = s"$GeocodingRootDBFS/geocodePreferences.xml"
 
 // These should not need to be modified
+val SDKLocationLocal = s"/dbfs/$GeocodingRootDBFS/sdk"
 val PreferencesFileLocal = s"/dbfs$PreferencesFileDBFS"
-val DataLocationLocal = s"/dbfs/$GeocodingRootDBFS/data"
+val DataLocationLocal = s"/dbfs$GeocodingRootDBFS/data"
+val ExtractLocationLocal = "/precisely/data"
 
 // COMMAND ----------
 
@@ -140,7 +142,6 @@ dbutils.fs.put(PreferencesFileDBFS,"""
         full list of "customPreferences"
     -->
     <!--<customKeyValuePair>FALLBACK_TO_WORLD=true</customKeyValuePair>-->
-    
     <!--
         returnedPointCoordinateSystem - Specifies the coordinate system that you want to convert the
         geometry to.
@@ -155,9 +156,7 @@ dbutils.fs.put(PreferencesFileDBFS,"""
         is the ISO 3166-1 Alpha-2 code, such as: en-US, fr_CA or fr_FR.
     -->
     <!-- <clientLocale>en_US</clientLocale> -->
-    
     <maxReturnedCandidates>10</maxReturnedCandidates>
-    
     <!--
         maxCandidateRangesToReturn - Specifies maximum number of ranges returned for a candidate
         Default: 1
@@ -182,12 +181,13 @@ import org.apache.spark.sql.functions._
 import java.io.File
 
 def getListOfSubDirectories(dir: File): List[String] = dir.listFiles.filter(_.isDirectory).map(_.getName).toList
-val subFolders = getListOfSubDirectories(new File(s"/dbfs$GeocodingRootDBFS/sdk"))
-val ResourcesLocationLocal = s"/dbfs$GeocodingRootDBFS/sdk/" + subFolders.filter(_.startsWith("spectrum-bigdata-geocoding"))(0) + "/resources/"
+val geocodingDirName = getListOfSubDirectories(new File(SDKLocationLocal)).filter(_.startsWith("spectrum-bigdata-geocoding"))(0)
+val ResourcesLocationLocal = s"$SDKLocationLocal/$geocodingDirName/resources/"
 
 GeocodeUDFBuilder.singleCandidateUDFBuilder()
 				.withResourcesLocation(ResourcesLocationLocal)
                 .withDataLocations(DataLocationLocal)
+                .withExtractionLocation(ExtractLocationLocal)
 				.withPreferencesFile(PreferencesFileLocal)
                 .withOutputFields("precisionCode", "PB_KEY", "formattedStreetAddress", "formattedLocationAddress", "x", "y")
 				.withErrorField("error")
@@ -227,7 +227,7 @@ df = df.withColumn("geocode_result",
           lit("country"), lit("USA")
         )
       )
-	).persist() 
+	).persist()
 	.select("*", "geocode_result.*").drop("geocode_result")
 
 display(df)
