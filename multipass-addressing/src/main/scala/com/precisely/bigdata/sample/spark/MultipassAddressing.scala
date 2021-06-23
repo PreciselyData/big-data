@@ -48,7 +48,6 @@ object MultipassAddressing {
       .config(sparkConf)
       .getOrCreate()
 
-
     // Load the addresses from the csv
     val addressInputDF = AddressInput.open(session, inputAddressPath)
 
