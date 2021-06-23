@@ -20,17 +20,13 @@ object VerificationDriver {
   def main(args: Array[String]): Unit = {
     val sparkConf = new SparkConf()
     sparkConf.setIfMissing("spark.master", "local[*]")
-    var sparkMajorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(0).toInt
-    if(sparkMajorVersion >= 3){
-      // Set this variable only for Spark version 3.0.x only
-      val sparkMinorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(1).toInt
-      if(sparkMajorVersion >= 3){
-        val sparkMinorVersion=org.apache.spark.SPARK_VERSION.split('=')(0).split('.')(1).toInt
-        if(sparkMajorVersion == 3 && sparkMinorVersion == 0){
-          sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF","true")
-        }
 
-      }
+    val versionInfo = org.apache.spark.SPARK_VERSION.split('=')(0).split('.')
+    if(versionInfo(0).toInt == 3 && versionInfo(1).toInt == 0) {
+      sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF", "true")
+    }
+
+
     sparkConf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
     val session = SparkSession.builder()
       .config(sparkConf)
