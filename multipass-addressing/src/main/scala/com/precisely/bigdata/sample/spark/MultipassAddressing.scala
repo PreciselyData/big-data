@@ -13,6 +13,8 @@
 
 package com.precisely.bigdata.sample.spark
 
+import java.util.{ArrayList, Collections, List}
+
 import com.pb.downloadmanager.api.DownloadManagerBuilder
 import com.pb.downloadmanager.api.downloaders.LocalFilePassthroughDownloader
 import com.pb.downloadmanager.api.downloaders.hadoop.{HDFSDownloader, S3Downloader}
@@ -25,7 +27,6 @@ import org.apache.spark.sql.functions.{col, lit, map}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-import java.util.{ArrayList, Collections, List}
 import scala.collection.JavaConversions._
 
 
@@ -123,7 +124,9 @@ class CustomExecutor extends AddressingExecutor {
       multiLineRequest = new RequestAddress()
       multiLineRequest.setAddressLines(getMainAddressLines(verifyResponse.getResults.get(0).getAddressLines))
       multiLineRequest.setAdmin1(verifyAddress.getAdmin1.getLongName)
-      multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
+      if (verifyAddress.getAdmin2 != null) {
+        multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
+      }
       multiLineRequest.setCity(verifyAddress.getCity.getLongName)
       multiLineRequest.setPostalCode(verifyAddress.getPostalCode)
       multiLineRequest.setCountry(verifyAddress.getCountry.getIsoAlpha3Code)
@@ -176,10 +179,12 @@ class CustomExecutor extends AddressingExecutor {
 
   def getMainAddressLines(addressLines: List[String]): List[String] = {
     val mainAddressLine = new ArrayList[String]()
-    mainAddressLine.addAll(addressLines.filter(_.nonEmpty).dropRight(1))
+
+    if (addressLines != null) {
+      mainAddressLine.addAll(addressLines.filter(_.nonEmpty).dropRight(1))
+    }
     mainAddressLine
   }
-
 }
 
 object AddressInput {
