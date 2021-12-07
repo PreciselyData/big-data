@@ -1,8 +1,8 @@
 ![Precisely](../Precisely_Logo.png)
 
-# Databricks Geocoding Sample
+# Operational Addressing SDK Geocoding Sample for Databricks
 This sample for Databricks demonstrates how to install, configure, and execute a geocoding process of Operational Addressing SDK in Databricks.
-After cloning or downloading the repo, you will have 2 scala files to be imported into your workspace https://docs.databricks.com/notebooks/notebooks-manage.html.  You will also have a jar, /lib/precisely-bigdata-pdx-sdk2.7-full.jar which will be added to your dbfs via a cell in the installation notebook.
+After cloning or downloading the repo, you will have 2 scala files to be imported into your workspace https://docs.databricks.com/notebooks/notebooks-manage.html.  You will also have a jar, /lib/precisely-bigdata-pdx-sdk2.8-full.jar which will be added to your dbfs via a cell in the installation notebook.
 
 ## Data
 This sample integrates Databricks with the Precisely Data Experience in order to access and configure your licensed reference data, which is required for running the geocoder.  Using your credentials you will be assured to be using the most recent data vintage.  This also expedites the setting up of data on your cluster.
@@ -11,7 +11,7 @@ This sample integrates Databricks with the Precisely Data Experience in order to
 
 ## Setting up DataExperience integration
   1) Collect your Data Experience API Key and Secret Key by visiting https://data.precisely.com/autodownload.  You will need these for the Geocoding Installation notebook.
-  2) The DataExperience SDK has been prebuilt and included in the repo at /lib/precisely-bigdata-pdx-sdk2.7-full.jar.  It will be added to your dbfs via a cell in the installation notebook.
+  2) The DataExperience SDK has been prebuilt and included in the repo at /lib/precisely-bigdata-pdx-sdk2.8-full.jar.  It will be added to your dbfs via a cell in the installation notebook.
 
 ## Installing Geocoding
 The Geocoding Installation notebook contains the commands necessary to install the geocoding libraries and reference data. The first command provides configuration variables for the notebook and will need to be updated with values specific to your environment. After updating the configuration section, you can execute each cell individually or run the entire notebook to perform the installation.
