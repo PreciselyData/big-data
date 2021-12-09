@@ -124,4 +124,4 @@ export GEOCODING_SPDS=( ${SDM_GEOCODING_SPDS.map(spd => s"${'"'}$spd${'"'}").mkS
 // MAGIC echo ""
 // MAGIC echo "Choose one of the jars below based on the spark/scala version of your cluster: Databricks 6 = Scala 2.11, Databricks 7 = Scala 2.12"
 // MAGIC
-// MAGIC ls $DBFS_SDK_EXTRACT_LOCATION/spark2/driver*/spectrum-bigdata-addressing-spark*-all.jar | sed 's/\/dbfs/dbfs:/'
+// MAGIC ls $DBFS_SDK_LOCATION/spark2/driver*/spectrum-bigdata-addressing-spark*-all.jar | sed 's/\/dbfs/dbfs:/'
