@@ -46,8 +46,8 @@ import org.apache.spark.sql.functions._
 import java.io.File
 
 def getListOfSubDirectories(dir: File): List[String] = dir.listFiles.filter(_.isDirectory).map(_.getName).toList
-val geocodingDirName = getListOfSubDirectories(new File(SDKLocationLocal)).filter(_.startsWith("resources"))(0)
-val ResourcesLocationLocal = s"$SDKLocationLocal/$geocodingDirName/"
+val subFolders = getListOfSubDirectories(new File(s"/dbfs$GeocodingRootDBFS/sdk"))
+val ResourcesLocationLocal = s"/dbfs$GeocodingRootDBFS/sdk/" + subFolders.filter(_.startsWith("spectrum-bigdata-addressing"))(0) + "/resources/"
 
 val geocodeUdf: UserDefinedFunction = new AddressingBuilder()
       .withResourcesLocation(ResourcesLocationLocal)
