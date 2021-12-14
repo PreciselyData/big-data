@@ -35,16 +35,16 @@ val SDM_GEOCODING_SPDS = Array(
 // Local Environment Setup - The remaining lines should not need to be modified
 val DBFS_BASE_LOCATION = s"$GeocodingRootDBFS"
 val DBFS_SDK_EXTRACT_LOCATION = s"$DBFS_BASE_LOCATION/sdk"
-val DBFS_SDK_LOCATION = s"$DBFS_SDK_EXTRACT_LOCATION/spectrum-bigdata-geocoding*"
+val DBFS_SDK_LOCATION = s"$DBFS_SDK_EXTRACT_LOCATION/spectrum-bigdata-addressing*"
 val DBFS_DATA_LOCATION = s"$DBFS_BASE_LOCATION/data"
 
 val LOCAL_DATA_TMP = s"$DBFS_BASE_LOCATION/tmp/data"
 val LOCAL_DATA_ZIPPED = s"$LOCAL_DATA_TMP/zip"
 val LOCAL_DATA_UNZIPPED = s"$LOCAL_DATA_TMP/unzipped"
 
-
 // Add the pdx sdk jar from github to your Filestore.
-val PDX_SDK_URL="https://raw.githubusercontent.com/PreciselyData/big-data/release-5.0/databricks-geocoding/lib/precisely-bigdata-pdx-sdk2.7-full.jar"
+val PDX_SDK_URL="https://raw.githubusercontent.com/PreciselyData/big-data/dev/databricks-geocoding/lib/precisely-bigdata-pdx-sdk2.8-full.jar"
+
 val PDX_CLASSNAME="com.precisely.pdx.sdkexample.SampleDemoApp"
 val DBFS_PDX_SDK_JAR=s"$DBFS_SDK_EXTRACT_LOCATION/pdx-sdk.jar"
 
@@ -124,4 +124,4 @@ export GEOCODING_SPDS=( ${SDM_GEOCODING_SPDS.map(spd => s"${'"'}$spd${'"'}").mkS
 // MAGIC echo ""
 // MAGIC echo "Choose one of the jars below based on the spark/scala version of your cluster: Databricks 6 = Scala 2.11, Databricks 7 = Scala 2.12"
 // MAGIC
-// MAGIC ls $DBFS_SDK_LOCATION/spark2/driver_*/spectrum-bigdata-geocoding-spark*-all.jar | sed 's/\/dbfs/dbfs:/'
+// MAGIC ls $DBFS_SDK_LOCATION/spark2/driver*/spectrum-bigdata-addressing-spark*-all.jar | sed 's/\/dbfs/dbfs:/'
