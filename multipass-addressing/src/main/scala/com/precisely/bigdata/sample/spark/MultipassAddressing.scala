@@ -20,6 +20,8 @@ import com.pb.downloadmanager.api.downloaders.LocalFilePassthroughDownloader
 import com.pb.downloadmanager.api.downloaders.hadoop.{HDFSDownloader, S3Downloader}
 import com.precisely.addressing.v1.model.{PreferencesBuilder, RequestAddress, Result}
 import com.precisely.bigdata.addressing.spark.api.{AddressingBuilder, AddressingExecutor, RequestInput}
+import com.precisely.addressing.v1.model.{KeyValue, ParsedResponse, Response}
+import com.precisely.addressing.v1.{Addressing, LookupType, Preferences}
 import org.apache.commons.collections.CollectionUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.expressions.UserDefinedFunction
@@ -176,7 +178,7 @@ class CustomExecutor extends AddressingExecutor {
 
   override def execute(lookupType: LookupType, preferences: Option[Preferences], addressing: Addressing, keyValues: KeyValue*): Response = ???
   override def execute(x: Double, y: Double, country: String, preferences: Option[Preferences], addressing: Addressing): Response = ???
-  
+
   def isAddressLevelMatch(result: Result): Boolean =
     result.getScore >= 90 && "ADDRESS".equals(result.getExplanation.getAddressMatch.getType.label)
 
