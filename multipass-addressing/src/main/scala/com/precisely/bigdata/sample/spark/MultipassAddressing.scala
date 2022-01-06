@@ -174,6 +174,9 @@ class CustomExecutor extends AddressingExecutor {
     }
   }
 
+  override def execute(lookupType: LookupType, preferences: Option[Preferences], addressing: Addressing, keyValues: KeyValue*): Response = ???
+  override def execute(x: Double, y: Double, country: String, preferences: Option[Preferences], addressing: Addressing): Response = ???
+  
   def isAddressLevelMatch(result: Result): Boolean =
     result.getScore >= 90 && "ADDRESS".equals(result.getExplanation.getAddressMatch.getType.label)
 
