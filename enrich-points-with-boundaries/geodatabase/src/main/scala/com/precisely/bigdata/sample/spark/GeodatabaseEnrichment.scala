@@ -80,16 +80,19 @@ object GeodatabaseEnrichment {
       table.search(filterSearch)
     }
 
-    //HAD-6529 assign output of withSpatialSearchColumns() in a DataFrame and  use .withColumns() method to create WKT and other formats to store in dataframe and then save on disk.
     val df = spark.read.option("delimiter", "\t").option("header", "true").csv(addressFabricPath)
       .select("PBKEY", "LON", "LAT")
       .withSpatialSearchColumns(Seq(col("LON").cast(DoubleType), col("LAT").cast(DoubleType)), contains, includeEmptySearchResults = false)
 
     /*
-    LI API supports attributes converters to convert a geometry to multiple formats.
-    Here, adding a new column named "wkt" to store coordinates in WKT format.
-    Similarly, geometries can be converted to WKB format using WKBUtilities as well.
-    */
+       LI API supports attributes converters to convert a geometry to multiple available formats e.g. WKT, WKB, GeoJSON,
+       GeoPackageGeometry and KML. LI API provides Utility classes to convert the geometry for all of them.
+
+       Here, X and Y coordinates are getting converted to WKT format using WKTUtilities.toWKT() method
+       and converted Point Geometry in WKT format is saved to a new column named "wkt".
+
+       Similarly, geometries can be converted to other formats using corresponding Utilities classes.
+     */
     val dfwithWKT = df.withColumn("wkt", toWKT(col("LON"), col("LAT")))
     dfwithWKT.write.mode(SaveMode.Overwrite).parquet(outputPath)
   }
