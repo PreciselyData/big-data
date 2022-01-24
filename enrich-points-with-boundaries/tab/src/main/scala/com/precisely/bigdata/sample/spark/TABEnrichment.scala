@@ -88,6 +88,8 @@ object TABEnrichment {
     /*
        LI API supports attributes converters to convert a geometry to multiple available formats e.g. WKT, WKB, GeoJSON,
        GeoPackageGeometry and KML. LI API provides Utility classes to convert the geometry for all of them.
+       More converters can be found in 'com.mapinfo.midev.persistence' package, see LI SDK Javadocs at
+       https://docs.precisely.com/docs/sftw/hadoop/landingpage/docs/li/lisdk/javadocs/index.html for more details.
 
        Here, X and Y coordinates are getting converted to WKT format using WKTUtilities.toWKT() method
        and converted Point Geometry in WKT format is saved to a new column named "wkt".
