@@ -17,13 +17,15 @@ import com.mapinfo.midev.coordsys.CoordSysConstants
 import com.mapinfo.midev.geometry.impl.Point
 import com.mapinfo.midev.geometry.{DirectPosition, SpatialInfo}
 import com.mapinfo.midev.language.filter.{FilterSearch, GeometryFilter, GeometryOperator, SelectList}
+import com.mapinfo.midev.persistence.wkt.WKTUtilities
 import com.pb.bigdata.li.spark.api.SpatialImplicits._
 import com.pb.bigdata.li.spark.api.table.TableBuilder
 import com.pb.downloadmanager.api.DownloadManagerBuilder
 import com.pb.downloadmanager.api.downloaders.LocalFilePassthroughDownloader
 import com.pb.downloadmanager.api.downloaders.hadoop.{HDFSDownloader, S3Downloader}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.expressions.UserDefinedFunction
+import org.apache.spark.sql.functions.{col, udf}
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
@@ -78,9 +80,26 @@ object GeodatabaseEnrichment {
       table.search(filterSearch)
     }
 
-    spark.read.option("delimiter", "\t").option("header", "true").csv(addressFabricPath)
+    val df = spark.read.option("delimiter", "\t").option("header", "true").csv(addressFabricPath)
       .select("PBKEY", "LON", "LAT")
       .withSpatialSearchColumns(Seq(col("LON").cast(DoubleType), col("LAT").cast(DoubleType)), contains, includeEmptySearchResults = false)
-      .write.mode(SaveMode.Overwrite).parquet(outputPath)
+
+    /*
+       LI API supports attributes converters to convert a geometry to multiple available formats e.g. WKT, WKB, GeoJSON,
+       GeoPackageGeometry and KML. LI API provides Utility classes to convert the geometry for all of them.
+       More converters can be found in 'com.mapinfo.midev.persistence' package, see LI SDK Javadocs at
+       https://docs.precisely.com/docs/sftw/hadoop/landingpage/docs/li/lisdk/javadocs/index.html for more details.
+
+       Here, X and Y coordinates are getting converted to WKT format using WKTUtilities.toWKT() method
+       and converted Point Geometry in WKT format is saved to a new column named "wkt".
+
+       Similarly, geometries can be converted to other formats using corresponding Utilities classes.
+     */
+    val dfwithWKT = df.withColumn("wkt", toWKT(col("LON"), col("LAT")))
+    dfwithWKT.write.mode(SaveMode.Overwrite).parquet(outputPath)
   }
+
+  def toWKT: UserDefinedFunction = udf((x : Double, y: Double) => {
+    WKTUtilities.toWKT(new Point(SpatialInfo.create(CoordSysConstants.longLatWGS84), new DirectPosition(x, y)))
+  })
 }
