@@ -36,9 +36,14 @@ object MultipassAddressing {
     val downloadLocation = args(2)
     val inputAddressPath = args(3)
     val outputDirectory = args(4)
-
     val sparkConf = new SparkConf()
     sparkConf.setIfMissing("spark.master", "local[*]")
+
+    val versionInfo = org.apache.spark.SPARK_VERSION.split('=')(0).split('.')
+    if(versionInfo(0).toInt == 3 && versionInfo(1).toInt == 0) {
+      sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF", "true")
+    }
+
     val session = SparkSession.builder()
       .config(sparkConf)
       .getOrCreate()

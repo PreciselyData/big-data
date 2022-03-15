@@ -142,6 +142,7 @@ dbutils.fs.put(PreferencesFileDBFS,"""
         full list of "customPreferences"
     -->
     <!--<customKeyValuePair>FALLBACK_TO_WORLD=true</customKeyValuePair>-->
+
     <!--
         returnedPointCoordinateSystem - Specifies the coordinate system that you want to convert the
         geometry to.
@@ -156,7 +157,9 @@ dbutils.fs.put(PreferencesFileDBFS,"""
         is the ISO 3166-1 Alpha-2 code, such as: en-US, fr_CA or fr_FR.
     -->
     <!-- <clientLocale>en_US</clientLocale> -->
+
     <maxReturnedCandidates>10</maxReturnedCandidates>
+
     <!--
         maxCandidateRangesToReturn - Specifies maximum number of ranges returned for a candidate
         Default: 1
@@ -231,4 +234,3 @@ df = df.withColumn("geocode_result",
 	.select("*", "geocode_result.*").drop("geocode_result")
 
 display(df)
-
