@@ -13,11 +13,15 @@
 
 package com.precisely.bigdata.sample.spark
 
+import java.util.{ArrayList, Collections, List}
+
 import com.pb.downloadmanager.api.DownloadManagerBuilder
 import com.pb.downloadmanager.api.downloaders.LocalFilePassthroughDownloader
 import com.pb.downloadmanager.api.downloaders.hadoop.{HDFSDownloader, S3Downloader}
 import com.precisely.addressing.v1.model.{PreferencesBuilder, RequestAddress, Result}
 import com.precisely.bigdata.addressing.spark.api.{AddressingBuilder, AddressingExecutor, RequestInput}
+import com.precisely.addressing.v1.model.{KeyValue, ParsedResponse, Response}
+import com.precisely.addressing.v1.{Addressing, LookupType, Preferences}
 import org.apache.commons.collections.CollectionUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.expressions.UserDefinedFunction
@@ -25,7 +29,6 @@ import org.apache.spark.sql.functions.{col, lit, map}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-import java.util.{ArrayList, Collections, List}
 import scala.collection.JavaConversions._
 
 
@@ -36,9 +39,14 @@ object MultipassAddressing {
     val downloadLocation = args(2)
     val inputAddressPath = args(3)
     val outputDirectory = args(4)
-
     val sparkConf = new SparkConf()
     sparkConf.setIfMissing("spark.master", "local[*]")
+
+    val versionInfo = org.apache.spark.SPARK_VERSION.split('=')(0).split('.')
+    if(versionInfo(0).toInt == 3 && versionInfo(1).toInt == 0) {
+      sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF", "true")
+    }
+
     val session = SparkSession.builder()
       .config(sparkConf)
       .getOrCreate()
@@ -118,7 +126,9 @@ class CustomExecutor extends AddressingExecutor {
       multiLineRequest = new RequestAddress()
       multiLineRequest.setAddressLines(getMainAddressLines(verifyResponse.getResults.get(0).getAddressLines))
       multiLineRequest.setAdmin1(verifyAddress.getAdmin1.getLongName)
-      multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
+      if (verifyAddress.getAdmin2 != null) {
+        multiLineRequest.setAdmin2(verifyAddress.getAdmin2.getLongName)
+      }
       multiLineRequest.setCity(verifyAddress.getCity.getLongName)
       multiLineRequest.setPostalCode(verifyAddress.getPostalCode)
       multiLineRequest.setCountry(verifyAddress.getCountry.getIsoAlpha3Code)
@@ -166,15 +176,20 @@ class CustomExecutor extends AddressingExecutor {
     }
   }
 
+  override def execute(lookupType: LookupType, preferences: Option[Preferences], addressing: Addressing, keyValues: KeyValue*): Response = ???
+  override def execute(x: Double, y: Double, country: String, preferences: Option[Preferences], addressing: Addressing): Response = ???
+
   def isAddressLevelMatch(result: Result): Boolean =
     result.getScore >= 90 && "ADDRESS".equals(result.getExplanation.getAddressMatch.getType.label)
 
   def getMainAddressLines(addressLines: List[String]): List[String] = {
     val mainAddressLine = new ArrayList[String]()
-    mainAddressLine.addAll(addressLines.filter(_.nonEmpty).dropRight(1))
+
+    if (addressLines != null) {
+      mainAddressLine.addAll(addressLines.filter(_.nonEmpty).dropRight(1))
+    }
     mainAddressLine
   }
-
 }
 
 object AddressInput {

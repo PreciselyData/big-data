@@ -25,6 +25,12 @@ object PointEnrichment {
     val sparkConf = new SparkConf()
     sparkConf.setIfMissing("spark.master", "local[*]")
     sparkConf.set("spark.sql.autoBroadcastJoinThreshold", "-1")
+
+    val versionInfo = org.apache.spark.SPARK_VERSION.split('=')(0).split('.')
+    if(versionInfo(0).toInt == 3 && versionInfo(1).toInt == 0) {
+      sparkConf.setIfMissing("spark.sql.legacy.allowUntypedScalaUDF", "true")
+    }
+
     val session = SparkSession.builder()
       .config(sparkConf)
       .getOrCreate()
