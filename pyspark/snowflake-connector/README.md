@@ -1,4 +1,11 @@
 ![Precisely](../../Precisely_Logo.png)
+# Overview of Snowflake Connector for Spark:
+The Snowflake Connector for Spark enables using Snowflake as an Apache Spark data source, similar to other data sources (PostgreSQL, HDFS, S3, etc.).
+
+![alt text](https://docs.snowflake.com/en/_images/spark-snowflake-data-source.png)
+
+For more information, please visit: https://docs.snowflake.com/en/user-guide/spark-connector-overview.html
+
 
 # Geo Addressing SDK Sample using Snowflake Connector for Spark
 This samples demonstrates how to configure, and execute an addressing process of Geo Addressing SDK for the data in Snowflake using Snowflake Connector for Spark in Databricks and EMR clusters.
