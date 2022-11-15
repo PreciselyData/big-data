@@ -4,6 +4,9 @@
 
 A collection of samples demonstrating how to use Spectrum Spatial for Big Data. This sample supports till Spark 3.0.x.
 
+### PySpark Addressing Sample
+This sample demonstrates how to use PySpark for executing Geo Addressing SDK APIs. This sample contains setting up Addressing in Databricks Cluster using PySpark. Also, sample notebooks are provided to use Snowflake Spark Connector in Python for the input data in Snowflake for Databricks and EMR clusters. 
+
 ### Enrichment Sample using Boundaries
 This sample demonstrates how to use Spark to enrich a CSV containing point data with attributes from a spatial file based on
 a point in polygon search. Enriching your point data with another dataset can provide you with
