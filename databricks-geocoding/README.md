@@ -2,8 +2,8 @@
 
 # Geo Addressing SDK for Big Data Sample for Databricks
 
-This sample for Databricks demonstrates how to install, configure, and execute a geocoding process of Operational
-Addressing SDK in Databricks.
+This sample for Databricks demonstrates how to install, configure, and execute a geocoding process of Geo
+Addressing SDK For Big Data in Databricks.
 After cloning or downloading the repo, you will have 2 scala files to be imported into your
 workspace https://docs.databricks.com/notebooks/notebooks-manage.html. You will also have a jar,
 /lib/precisely-bigdata-pdx-sdk2.8-full.jar which will be added to your dbfs via a cell in the installation notebook.
