@@ -1,4 +1,4 @@
-![Precisely](../Precisely_Logo.png)
+![Precisely](../../Precisely_Logo.png)
 
 Enrichment Sample
 ---------------------

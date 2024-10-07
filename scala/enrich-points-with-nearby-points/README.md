@@ -1,4 +1,4 @@
-![Precisely](../Precisely_Logo.png)
+![Precisely](../../Precisely_Logo.png)
 
 # Point Enrichment Sample
 This sample demonstrates how to use Spark to enrich a CSV containing point data with attributes associated with 
