@@ -1,4 +1,4 @@
-![Precisely](../../Precisely_Logo.png)
+![Precisely](../Precisely_Logo.png)
 
 # Operational Addressing SDK Geocoding Sample for Databricks
 This sample for Databricks demonstrates how to install, configure, and execute a geocoding process of Operational Addressing SDK in Databricks.

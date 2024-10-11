@@ -1,4 +1,4 @@
-![Precisely](../../Precisely_Logo.png)
+![Precisely](../Precisely_Logo.png)
 
 # Multipass Geocoding Sample
 This sample for the Spark Geocoding API in Scala demonstrates how to improve geocoding results by performing multipass geocoding. With multipass geocoding, for all first-pass results without point-level precision, a second geocoding pass is run using single line address matching, which may return more accurate geocodes. 

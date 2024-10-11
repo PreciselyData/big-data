@@ -1,4 +1,4 @@
-![Precisely](../../Precisely_Logo.png)
+![Precisely](../Precisely_Logo.png)
 
 # Geohash Aggregation Sample
 This sample demonstrates how to return geohashes for point locations and aggregate the data in each geohash. 
