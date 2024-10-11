@@ -37,3 +37,12 @@ This sample demonstrates setting up geocoding on a databricks cluster.
 
 ### Multipass Addressing Sample
 This sample for the Spark Addressing SDK in Scala demonstrates how to improve geocoding results by performing verify first and then geocoding. With this multipass addressing example, for all results without address level precision, a second geocoding pass is run using single line input address, which may increase match rate.
+
+### Spark UDF notebook for drivers and UDF(Python, Scala)
+This sample demonstrates using location intelligence for big data to run spatial geometry operations using spark sql using scala or python notebooks. We can also run spatial operations like Point in Polygon, Search Nearest, Join by Distance and Hexgen as Spark submit job. Refer to https://github.com/PreciselyData/big-data/blob/release-5.2.1/pyspark/databricks-li/LI-SDK-UDF-Pyspark.ipynb using pyspark
+and https://github.com/PreciselyData/big-data/blob/release-5.2.1/scala/databricks-li/Spark-sql-functions.scala using scala notebooks for running these spatial operations.
+Refer to https://github.com/PreciselyData/big-data/blob/release-5.2.1/pyspark/databricks-li/LI-SDK-Drivers-Pyspark.ipynb for running Spark drivers using Pyspark and https://github.com/PreciselyData/big-data/tree/release-5.2.1/scala/databricks-li for running these drivers using scala notebooks.
+
+
+
+
