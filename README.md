@@ -2,7 +2,7 @@
 
 # Samples
 
-A collection of samples demonstrating how to use Spectrum Spatial for Big Data. This sample supports till Spark 3.0.x.
+A collection of samples demonstrating how to use Location Intelligence for Big Data. This sample supports till Spark 3.5.3.
 
 ### PySpark Addressing Sample
 This sample demonstrates how to use PySpark for executing Geo Addressing SDK APIs. This sample contains setting up Addressing in Databricks Cluster using PySpark. Also, sample notebooks are provided to use Snowflake Spark Connector in Python for the input data in Snowflake for Databricks and EMR clusters. 
@@ -37,3 +37,18 @@ This sample demonstrates setting up geocoding on a databricks cluster.
 
 ### Multipass Addressing Sample
 This sample for the Spark Addressing SDK in Scala demonstrates how to improve geocoding results by performing verify first and then geocoding. With this multipass addressing example, for all results without address level precision, a second geocoding pass is run using single line input address, which may increase match rate.
+
+### Spark drivers and UDF (Python, Scala)
+This sample demonstrates using location intelligence for big data to run spatial geometry operations using spark sql in scala or python notebooks. We can also run spatial operations like Point in Polygon, Search Nearest, Join by Distance and Hexgen as Spark drivers using Spark submit job. 
+
+<ol>
+  <li><strong>Pyspark notebooks for Spark UDF</strong> https://github.com/PreciselyData/big-data/blob/release-5.2.1/pyspark/databricks-li/LI-SDK-UDF-Pyspark.ipynb</li>
+  <li><strong>Pyspark notebooks for Spark drivers</strong> https://github.com/PreciselyData/big-data/blob/release-5.2.1/pyspark/databricks-li/LI-SDK-Drivers-Pyspark.ipynb</li>
+  <li><strong>Scala notebooks for Spark UDF</strong> https://github.com/PreciselyData/big-data/blob/release-5.2.1/scala/databricks-li/Spark-sql-functions.scala</li>
+  <li><strong>Scala notebooks for Spark drivers</strong> https://github.com/PreciselyData/big-data/tree/release-5.2.1/scala/databricks-li</li>
+</ol>
+
+
+
+
+

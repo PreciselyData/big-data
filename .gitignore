@@ -1,0 +1,15 @@
+.gradle
+*/build
+*/*/build
+*/*/*/build
+*/*/*/*/build
+*/bin
+*/*/bin
+*/*/*/bin
+*/*/*/*/bin
+**/.cph
+**/.idea
+**/.DS_Store
+.idea
+.vscode
+
