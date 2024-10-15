@@ -23,18 +23,17 @@ Use `JNAME=zulu11-ca-amd64` to enable Java 11
 
 ## 2. Downloading the Distribution and installing the jar
 
-- Import the [Installation Guide Notebook](./Installing_SDK.ipynb) in your Databricks account and follow the instructions by replacing the variables to install the reference data.
+- Import the [Installation Guide Notebook](./Installing_SDK.ipynb) in your Databricks account. The LI Installation notebook contains the commands necessary to download the LI SDK Distribution.
 
-- The LI Installation notebook contains the commands necessary to download the LI SDK Distribution.
-
-- You need to provide the URL for the location of the Location Intelligence for Big Data product distribution url. You should be able to find this URL in your product delivery email from Precisely. 
-- See these links for information on creating AWS presigned https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html , and for Azure https://docs.microsoft.com/en-us/rest/api/storageservices/Service-SAS-Examples?redirectedfrom=MSDN . 
-- If you prefer, you may manually copy the product distribution to your dbfs and use a file:///dbfs/<path_on_dbfs> URL.
+- You need to provide the URL for the location of the Location Intelligence for Big Data product distribution url. You should be able to find this URL in your product delivery email from Precisely.
+(You can also create a Presigned URL if your product distribution zip is in the Storage Services like Amazon S3).
 
 - <strong> After executing the Installation Guide Notebook</strong>, you will see a jar called out in the results. This jar should be added as a library to your cluster https://docs.databricks.com/libraries/index.html.
 
 
-**NOTE**: The sdk jar library for pyspark and scala notebooks to be attached is same.
+**NOTE**: If you prefer, you may manually copy the product distribution to your dbfs and use a file:///dbfs/<path_on_dbfs> URL.
+
+The sdk jar library for pyspark and scala notebooks to be attached is same.
 
 
 ## 3. Running the Location Intelligence Application for Big Data
