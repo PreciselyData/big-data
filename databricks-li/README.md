@@ -39,13 +39,18 @@ A sample notebook is provided along with required code snippets  to run the Loca
 If you are using PySpark,follow :
 
   [Location Intelligence Notebook for Spark Drivers](./pyspark/LI-SDK-Drivers-Pyspark.ipynb) for executing Spatial operations as Spark drivers.
+  
   [Location Intelligence Notebook for Spark SQL](./pyspark/LI-SDK-UDF-Pyspark.ipynb) for executing Spatial operations as Spark SQL.
 
 If you are using Scala,follow :
 
   [Location Intelligence Notebook for Spark Drivers](./scala/LI-JoinByDistance.scala) for executing Spatial Join by distance operation.
+  
   [Location Intelligence Notebook for Spark Drivers](./scala/PointInPolygon.scala) for executing Spatial Point in polygon operation.
+  
   [Location Intelligence Notebook for Spark Drivers](./scala/SearchNearest.scala) for executing Spatial Search Nearest operation.
+  
   [Location Intelligence Notebook for Spark Drivers](./scala/Hexgen.scala) for executing Spatial HexGenerator operation.
+  
   [Location Intelligence Notebook for Spark SQL](./scala/Spark-sql-functions.scala) for executing Spatial operations as Spark SQL.
 
