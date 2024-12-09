@@ -36,11 +36,23 @@ import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import java.io.File
 
+// The dbfs base path where Geo Addressing Big Data SDK is extracted.
 val addressingSdkLocation = "/dbfs/precisely/addressing/geo-addressing-bigdata-distribution-5.2.1"
+
+// The location to resources directory in the Geo Addressing SDK Distribution.
 val resourceLocation = s"$addressingSdkLocation/resources"
+
+// The Reference Data SPD Location of DBFS
+val dataLocation = Seq("/dbfs/precisely/addressing/data/2024.11")
+
+// References Data SPDs will be extracted during runtime at the provided path of every worker node.
+val dataExtractLocationLocal = "/precisely/addressing/data/usa/2024.11"
+
 val outputFields = Seq("customFields['PB_KEY']", "address.formattedStreetAddress", "address.formattedLocationAddress", "location.feature.geometry.coordinates.x", "location.feature.geometry.coordinates.y")
 val geocodeUdf: UserDefinedFunction = new AddressingBuilder()
       .withResourcesLocation(resourceLocation)
+      .withDataLocations(dataLocation: _*)
+      .withExtractionLocation(dataExtractLocationLocal)
       .udfBuilder()
       .withOutputFields(outputFields: _*)
       .withErrorField("error")
@@ -64,7 +76,7 @@ display(df)
 // COMMAND ----------
 
 // MAGIC %md
-// MAGIC ## NOTE: Please run some warm up calls to start the Geo Addressing Engine, before running on large data.
+// MAGIC ## NOTE: As the geocoder engine extracts the SPDs during runtime, to get the best performance, please run warm-up calls for few addresses before running on larger files.
 // MAGIC Also, as the geocode operation can be computationally expensive, Adding a call to "df.persist()" directly after the geocode function should ensure that each record calls the geocode function only once.
 
 // COMMAND ----------
@@ -90,6 +102,8 @@ display(geocodeDF)
 
 val geocodeUdf: UserDefinedFunction = new AddressingBuilder()
       .withResourcesLocation(resourceLocation)
+      .withDataLocations(dataLocation: _*)
+      .withExtractionLocation(dataExtractLocationLocal)
       .udfBuilder()
       .withOutputFields(outputFields: _*)
       .withErrorField("error")
