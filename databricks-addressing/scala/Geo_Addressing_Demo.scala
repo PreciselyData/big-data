@@ -37,16 +37,17 @@ import org.apache.spark.sql.functions._
 import java.io.File
 
 // The dbfs base path where Geo Addressing Big Data SDK is extracted.
-val addressingSdkLocation = "/dbfs/precisely/addressing/geo-addressing-bigdata-distribution-5.2.1"
+// Replace the VERSION placeholder with your current version of Geo Addressing SDK for Big Data
+val addressingSdkLocation = "/dbfs/precisely/addressing/geo-addressing-bigdata-distribution-<VERSION>"
 
 // The location to resources directory in the Geo Addressing SDK Distribution.
 val resourceLocation = s"$addressingSdkLocation/resources"
 
 // The Reference Data SPD Location of DBFS
-val dataLocation = Seq("/dbfs/precisely/addressing/data/2024.11")
+val dataLocation = Seq("/dbfs/precisely/addressing/data/<VINTAGE>")
 
 // References Data SPDs will be extracted during runtime at the provided path of every worker node.
-val dataExtractLocationLocal = "/precisely/addressing/data/usa/2024.11"
+val dataExtractLocationLocal = "/precisely/addressing/data/usa/<VINTAGE>"
 
 val outputFields = Seq("customFields['PB_KEY']", "address.formattedStreetAddress", "address.formattedLocationAddress", "location.feature.geometry.coordinates.x", "location.feature.geometry.coordinates.y")
 val geocodeUdf: UserDefinedFunction = new AddressingBuilder()
