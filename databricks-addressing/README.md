@@ -70,7 +70,7 @@ For Scala, refer [Geo_Addressing_Demo Notebook](./scala/Geo_Addressing_Demo.scal
 
 Refer the following links for more information about Geo Addressing SDK for Big Data and it's usage:
 
-- [Product User Guide](https://help.precisely.com/r/p/Geo-Addressing-SDK-for-Big-Data/pub/5.2.2/en-US/Geo-Addressing-SDK-for-Big-Data-Guide)
+- [Product User Guide](https://help.precisely.com/r/p/Geo-Addressing-SDK-for-Big-Data/pub/5.2.3/en-US/Geo-Addressing-SDK-for-Big-Data-Guide)
 - [Reference Documentation Landing Page](https://docs.precisely.com/docs/sftw/hadoop/landingpage/index.html)
 
 
@@ -79,10 +79,11 @@ Refer the following links for more information about Geo Addressing SDK for Big 
 
 Refer to the following chart for GA-SDK version against Geo Addressing SDK for Big Data Version.
 
-| Geo Addressing SDK for Big Data Version  | GA-SDK Version |
-| ------------- | ------------- |
-| 5.1.0.8 - 5.1.0.10  | 5.1.27  |
-| 5.1.0.11  | 5.1.682  |
-| 5.2.0.0  | 5.1.796  |
-| 5.2.1  | 5.1.854  |
-| 5.2.2  | 11.1.1250  |
+| Geo Addressing SDK for Big Data Version | GA-SDK Version |
+|-----------------------------------------|----------------|
+| 5.1.0.8 - 5.1.0.10                      | 5.1.27         |
+| 5.1.0.11                                | 5.1.682        |
+| 5.2.0.0                                 | 5.1.796        |
+| 5.2.1                                   | 5.1.854        |
+| 5.2.2                                   | 11.1.1250      |
+| 5.2.3                                   | 11.1.1695      |
