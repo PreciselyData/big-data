@@ -3,7 +3,9 @@
 # Geo Addressing SDK for Big Data in Databricks
 This sample for Databricks demonstrates how to install, configure, and execute an geo addressing capabilities of Geo Addressing SDK in Databricks.
 
-> **NOTE: For Dtabricks Unity Catalogue Shared Compute, the Geo Addressing SDK for Big Data is not supported because of the architecture limitations on Shared Compute. We recommend using Personal or Single User Compute for running the Geo Addressing SDK for Big Data.**
+**NOTE: For Databricks Unity Catalogue Enabled _Shared Computes_, the Geo Addressing SDK for Big Data is not supported because of the architecture limitations on Shared Computes. 
+We recommend using Personal or Single User Compute for running the Geo Addressing SDK for Big Data.
+Also, as recommended by Databricks Team, you should use a Dedicated/Unrestricted Clusters Assigned to a Group https://docs.databricks.com/aws/en/compute/group-access **
 
 ## Getting Started
 
