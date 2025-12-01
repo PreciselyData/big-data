@@ -11,7 +11,7 @@ repositories {
 }
 
 wrapper {
-	gradleVersion = "6.4.1"
+	gradleVersion = "8.7"
 }
 
 dependencies {
