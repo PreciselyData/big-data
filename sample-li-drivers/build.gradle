@@ -7,7 +7,13 @@ repositories {
 }
 
 dependencies {
-    implementation files('./libs/location-intelligence-bigdata-li-sdk-spark2.13-0-SNAPSHOT.jar')
-	implementation 'org.rogach:scallop_2.13:5.2.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // dependencies for scala 2.13
+    implementation 'org.rogach:scallop_2.13:5.2.0'
 	compileOnly 'org.apache.spark:spark-sql_2.13:4.0.1'
+
+//    dependencies for scala 2.12
+//    implementation 'org.rogach:scallop_2.12:5.2.0'
+//    compileOnly 'org.apache.spark:spark-sql_2.12:4.0.1'
 }
