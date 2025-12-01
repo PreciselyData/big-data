@@ -15,7 +15,7 @@ import com.precisely.bigdata.li.spark.app.drivers.joinbydistance
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.rogach.scallop.ScallopOption
 
-object JoinByDistanceDriver extends App {
+object SampleJoinByDistanceLIDriver extends App {
 
     private def getJoinOptions(limit: ScallopOption[Int], distanceColumnName: ScallopOption[String],
                                limitMethod: LimitMethods): Map[DistanceJoinOption, Any] = {

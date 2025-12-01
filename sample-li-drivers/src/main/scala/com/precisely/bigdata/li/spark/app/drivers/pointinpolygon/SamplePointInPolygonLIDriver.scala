@@ -14,7 +14,7 @@ import com.precisely.bigdata.li.spark.app.drivers.DriverConstants.AllowUntypedSc
 import com.precisely.bigdata.li.spark.app.drivers.pointinpolygon
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-object PointInPolygonDriver extends App {
+object SamplePointInPolygonLIDriver extends App {
     val commandLine = new pointinpolygon.BaseCommandLine(args.toSeq, this.getClass.getName, "command line for pointInPolygon operation")
     val spark = SparkSession.builder().appName(this.getClass.getName).config(AllowUntypedScalaUDF, "true").getOrCreate()
 

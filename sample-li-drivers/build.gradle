@@ -10,11 +10,4 @@ dependencies {
     implementation files('./libs/location-intelligence-bigdata-li-sdk-spark2.13-0-SNAPSHOT.jar')
 	implementation 'org.rogach:scallop_2.13:5.2.0'
 	compileOnly 'org.apache.spark:spark-sql_2.13:4.0.1'
-	testImplementation 'org.apache.spark:spark-sql_2.13:4.0.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-    testImplementation "commons-lang:commons-lang:2.6"
-}
-
-test {
-    useJUnitPlatform()
 }

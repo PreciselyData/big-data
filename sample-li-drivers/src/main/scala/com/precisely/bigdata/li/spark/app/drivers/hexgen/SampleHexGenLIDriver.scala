@@ -11,7 +11,7 @@ import com.precisely.bigdata.li.spark.app.drivers.DriverConstants.AllowUntypedSc
 import com.precisely.bigdata.li.spark.app.drivers.hexgen
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-object HexGenDriver extends App {
+object SampleHexGenLIDriver extends App {
     val commandLine = new hexgen.BaseCommandLine(args.toSeq, this.getClass.getName, "command line for hexgen operation")
 
     val session = SparkSession.builder().appName(this.getClass.getName).config(AllowUntypedScalaUDF, "true").getOrCreate()

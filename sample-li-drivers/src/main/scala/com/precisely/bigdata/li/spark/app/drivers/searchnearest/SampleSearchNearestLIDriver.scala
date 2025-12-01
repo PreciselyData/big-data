@@ -14,7 +14,7 @@ import com.precisely.bigdata.li.spark.app.drivers.DriverConstants.AllowUntypedSc
 import com.precisely.bigdata.li.spark.app.drivers.searchnearest
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-object SearchNearestDriver extends App {
+object SampleSearchNearestLIDriver extends App {
     val commandLine = new searchnearest.BaseCommandLine(args.toSeq, this.getClass.getName, "command line for searchNearest operation")
     val spark = SparkSession.builder().appName(this.getClass.getName).config(AllowUntypedScalaUDF, "true").getOrCreate()
 
