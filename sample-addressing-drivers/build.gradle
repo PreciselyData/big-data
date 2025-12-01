@@ -1,0 +1,35 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id 'scala'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets.main.scala.srcDirs = ['src/main/scala']
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.rogach:scallop_2.13:5.2.0"
+    compileOnly "org.apache.spark:spark-sql_2.13:4.0.1"
+
+//    implementation "org.rogach:scallop_2.12:5.2.0"
+//    compileOnly "org.apache.spark:spark-sql_2.12:3.5.7"
+}
+
+shadowJar {
+    zip64 true
+}
+
+build.dependsOn(shadowJar)
+
+wrapper {
+    gradleVersion = "8.9"
+}
+
+tasks.withType(ScalaCompile).configureEach {
+    scalaCompileOptions.additionalParameters = [
+            '-language:postfixOps'
+    ]
+}

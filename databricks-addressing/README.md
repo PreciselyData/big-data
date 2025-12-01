@@ -30,7 +30,7 @@ To enable JDK 11, you can pass the `JNAME` as environment variable:
 
 ## 2. Installing Reference Data
 
-**NOTE**: We recommend to extract the reference data during runtime, as downloading at dbfs path will create performance issues.
+**NOTE**: We recommend to extract the reference data during runtime, as downloading at dbfs path or volumes will create performance issues.
 
 - Collect your Data Experience API Key and Secret Key by visiting https://data.precisely.com/autodownload.  You will need these for the Addressing Installation notebook.
 
