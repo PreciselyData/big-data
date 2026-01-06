@@ -3,6 +3,8 @@
 # Geo Addressing SDK for Big Data in Databricks
 This sample for Databricks demonstrates how to install, configure, and execute an geo addressing capabilities of Geo Addressing SDK in Databricks.
 
+> **NOTE: For Dtabricks Unity Catalogue Shared Compute, the Geo Addressing SDK for Big Data is not supported because of the architecture limitations on Shared Compute. We recommend using Personal or Single User Compute for running the Geo Addressing SDK for Big Data.**
+
 ## Getting Started
 
 Below are the steps mentioned to get started with using Geo Addressing SDK for Big Data in Databricks.
@@ -28,7 +30,7 @@ To enable JDK 11, you can pass the `JNAME` as environment variable:
 
 ## 2. Installing Reference Data
 
-**NOTE**: We recommend to download, extract and configure the Geo Addressing Reference Data before running the Geo Addressing Application, as downloading at runtime will create performance issues.
+**NOTE**: We recommend to extract the reference data during runtime, as downloading at dbfs path or volumes will create performance issues.
 
 - Collect your Data Experience API Key and Secret Key by visiting https://data.precisely.com/autodownload.  You will need these for the Addressing Installation notebook.
 
@@ -63,3 +65,24 @@ A sample notebook is provided along with required code snippts to run the Geo Ad
 For PySpark, refer [Geo_Addressing_Demo Notebook](./pyspark/Geo_Addressing_Demo.ipynb) for executing Geo Addressing Application.
 
 For Scala, refer [Geo_Addressing_Demo Notebook](./scala/Geo_Addressing_Demo.scala) for executing Geo Addressing Application.
+
+# Useful Links and References
+
+Refer the following links for more information about Geo Addressing SDK for Big Data and it's usage:
+
+- [Product User Guide](https://help.precisely.com/r/p/Geo-Addressing-SDK-for-Big-Data/pub/5.2.2/en-US/Geo-Addressing-SDK-for-Big-Data-Guide)
+- [Reference Documentation Landing Page](https://docs.precisely.com/docs/sftw/hadoop/landingpage/index.html)
+
+
+
+# Version Chart
+
+Refer to the following chart for GA-SDK version against Geo Addressing SDK for Big Data Version.
+
+| Geo Addressing SDK for Big Data Version  | GA-SDK Version |
+| ------------- | ------------- |
+| 5.1.0.8 - 5.1.0.10  | 5.1.27  |
+| 5.1.0.11  | 5.1.682  |
+| 5.2.0.0  | 5.1.796  |
+| 5.2.1  | 5.1.854  |
+| 5.2.2  | 11.1.1250  |

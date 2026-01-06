@@ -23,6 +23,9 @@ Use `JNAME=zulu11-ca-amd64` to enable Java 11
 
 ## 2. Downloading the Distribution and installing the jar
 
+*NOTE*: There is a size limitation from databricks while downloading the remote files beyond 500MB.
+If you face this issue, skip this step and manually upload the extracted distribution zip to your desired location.
+
 - Import the [Installation Guide Notebook](./Installing_SDK.ipynb) in your Databricks account. The LI Installation notebook contains the commands necessary to download the LI SDK Distribution.
 
 - You need to provide the URL for the location of the Location Intelligence for Big Data product distribution url. You should be able to find this URL in your product delivery email from Precisely.
