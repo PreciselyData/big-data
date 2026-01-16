@@ -10,29 +10,11 @@ import com.pb.downloadmanager.api.downloaders.LocalFilePassthroughDownloader
 import com.pb.downloadmanager.api.downloaders.hadoop.{AzureDownloader, GoogleDownloader, HDFSDownloader, S3Downloader}
 import com.pb.downloadmanager.api.{DownloadManagerBuilder, PermissionsManager, PosixPermissionsManagerBuilder}
 import com.precisely.bigdata.addressing.spark.api.{AddressingBuilder, UDFBuilder}
+import com.precisely.bigdata.addressing.spark.app.DriverUtils.{GEOCODE, LOOKUP, REVERSE, REVERSE_GEOCODE, VERIFY, buildInputAddressingFields, buildInputLookupFields, buildInputReverseGeocodeFields}
 import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.DataTypes.DoubleType
-import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
+import org.apache.spark.sql.{Column, SaveMode, SparkSession}
 
 object SampleAddressingDriver extends App {
-  private val buildInputAddressMap = (commandLine: BaseCommandLine, df: DataFrame) => {
-    val addressFields = commandLine.inputFields.filterNot(_._1 == COUNTRY_KEY)
-      .map(inputField =>
-        (lit(inputField._1), concat_ws(" ", inputField._2.split(",").toSeq.map(field =>
-          col(df.columns(DriverUtils.getRequiredColumnIndex(inputField._1, Option(field), df)))
-        ): _*))
-      )
-      .flatMap { case (k, v) => Seq(k, v) }
-      .toList
-
-    val countryKey = lit("country")
-    val countryValue = DriverUtils.buildFallbackToLiteral("country", commandLine.country, df, commandLine)
-
-    map((addressFields :+ countryKey :+ countryValue).toIndexedSeq: _*)
-  }
-
-  private val COUNTRY_KEY = "country"
   val commandLine = new BaseCommandLine(args.toSeq, this.getClass.getName, "command line for addressing (geocode, verify, lookup, reverseGeocode)")
   private val session = SparkSession.builder().appName(this.getClass.getName).getOrCreate()
 
@@ -47,7 +29,7 @@ object SampleAddressingDriver extends App {
     df = df.repartition(commandLine.numPartitions())
   }
 
-  private var builder = new AddressingBuilder()
+  var builder = new AddressingBuilder()
     .withResourcesLocation(commandLine.resourcesLocation())
 
   if (commandLine.downloadLocation.isDefined) {
@@ -77,14 +59,14 @@ object SampleAddressingDriver extends App {
   commandLine.errorField.foreach(udfBuilder.withErrorField)
   commandLine.jsonOutputField.foreach(udfBuilder.withResultAsJSON)
 
-  private val operationUdf: UserDefinedFunction = commandLine.operation() match {
-    case "geocode" =>
+  private val operationUdf: UserDefinedFunction = commandLine.operation().toLowerCase() match {
+    case GEOCODE =>
       udfBuilder.forGeocode()
-    case "verify" =>
+    case VERIFY =>
       udfBuilder.forVerify()
-    case "lookup" =>
+    case LOOKUP =>
       udfBuilder.forLookup()
-    case "reverseGeocode" =>
+    case REVERSE_GEOCODE | REVERSE =>
       udfBuilder.forReverseGeocode()
     case _ =>
       throw new IllegalArgumentException("Not a valid '--operation' parameter")
@@ -92,24 +74,22 @@ object SampleAddressingDriver extends App {
 
   private val datasetName = "addressing_result"
 
-  commandLine.operation() match {
-    case "geocode" | "verify" | "parse" =>
-      df = df.withColumn(datasetName, operationUdf(buildInputAddressMap(commandLine, df)))
+  commandLine.operation().toLowerCase() match {
+    case GEOCODE | VERIFY =>
+      val mapOfAddressingFields: Column = buildInputAddressingFields(commandLine, df)
+      df = df.withColumn(datasetName, operationUdf(mapOfAddressingFields))
         .persist()
         .select("*", datasetName + ".*").drop(datasetName)
-    case "lookup" =>
-      df = df.withColumn(datasetName, operationUdf(lit("PB_KEY"), col(df.columns(Integer.valueOf(commandLine.inputFields("key")))), lit("USA")))
+    case LOOKUP =>
+      val (col1, col2, col3) = buildInputLookupFields(commandLine, df)
+      df = df.withColumn(datasetName, operationUdf(col1, col2, col3))
         .persist()
         .select("*", datasetName + ".*").drop(datasetName)
-    case "reverseGeocode" =>
-      if (commandLine.inputFields.contains("country"))
-        df = df.withColumn(datasetName, operationUdf(col(df.columns(Integer.valueOf(commandLine.inputFields("x")))).cast(DoubleType), col(df.columns(Integer.valueOf(commandLine.inputFields("y")))).cast(DoubleType), col(df.columns(Integer.valueOf(commandLine.inputFields("country"))))))
-          .persist()
-          .select("*", datasetName + ".*").drop(datasetName)
-      else
-        df = df.withColumn(datasetName, operationUdf(col(df.columns(Integer.valueOf(commandLine.inputFields("x")))).cast(DoubleType), col(df.columns(Integer.valueOf(commandLine.inputFields("y")))).cast(DoubleType), lit("")))
-          .persist()
-          .select("*", datasetName + ".*").drop(datasetName)
+    case REVERSE_GEOCODE | REVERSE =>
+      val (x, y, country) = buildInputReverseGeocodeFields(commandLine, df)
+      df = df.withColumn(datasetName, operationUdf(x, y, country))
+        .persist()
+        .select("*", datasetName + ".*").drop(datasetName)
     case _ =>
       throw new IllegalArgumentException("Not a valid '--operation' parameter")
   }

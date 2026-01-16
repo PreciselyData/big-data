@@ -14,6 +14,7 @@ dependencies {
     implementation "org.rogach:scallop_2.13:5.2.0"
     compileOnly "org.apache.spark:spark-sql_2.13:4.0.1"
 
+//    For Scala v2.12
 //    implementation "org.rogach:scallop_2.12:5.2.0"
 //    compileOnly "org.apache.spark:spark-sql_2.12:3.5.7"
 }
