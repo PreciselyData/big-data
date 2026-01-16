@@ -10,23 +10,13 @@ This sample for Databricks demonstrates how to install, configure, and execute a
 Below are the steps mentioned to get started with using Geo Addressing SDK for Big Data in Databricks.
 
 ## 1. Start the Compute/Cluster
-Since Geo Addressing SDK for Big Data release 5.2.1, the SDK requires JDK 11 (jdk-8 is no logner supported), you need to create the cluster with your required configuration along with JDK 11.
-To enable JDK 11, you can pass the `JNAME` as environment variable:
 
+Refer to the [version chart](#version-chart) at the end of this document 
+to determine the appropriate java and scala versions for your Geo Addressing SDK for Big Data version.
 
-- From Databricks Runtime Version 15.*:
+Use `JNAME=zulu17-ca-amd64` to enable Java 17.
 
-    Use `JNAME=zulu17-ca-amd64` to enable Java 17.
-
-    ![alt text](jname-17.png)
-
-- For Databricks Runtime Version below 15.*: 
-
-    Use `JNAME=zulu11-ca-amd64` to enable Java 11.
-    
-    ![alt text](jname11.png)
-
-**NOTE**: Using `spark.sql.files.maxPartitionBytes=64430`, we have observed the best performance for Geo Addressing SDK in Databricks. (You can create optimal partitions as per your requirements) 
+![alt text](jname-17.png)
 
 ## 2. Installing Reference Data
 
@@ -79,10 +69,12 @@ Refer the following links for more information about Geo Addressing SDK for Big 
 
 Refer to the following chart for GA-SDK version against Geo Addressing SDK for Big Data Version.
 
-| Geo Addressing SDK for Big Data Version  | GA-SDK Version |
-| ------------- | ------------- |
-| 5.1.0.8 - 5.1.0.10  | 5.1.27  |
-| 5.1.0.11  | 5.1.682  |
-| 5.2.0.0  | 5.1.796  |
-| 5.2.1  | 5.1.854  |
-| 5.2.2  | 11.1.1250  |
+| Geo Addressing SDK for Big Data Version | GA-SDK Version | JDK Version | Scala Version |
+|-----------------------------------------|----------------|-------------|---------------|
+| 5.1.0.8 - 5.1.0.10                      | 5.1.27         | 8           | 2.12          |
+| 5.1.0.11                                | 5.1.682        | 8           | 2.12          |
+| 5.2.0.0                                 | 5.1.796        | 8           | 2.12          |
+| 5.2.1                                   | 5.1.854        | 11          | 2.12          |
+| 5.2.2                                   | 11.1.1250      | 11          | 2.12          |
+| 11.2.0                                  | 11.2.228       | 17          | 2.12, 2.13    |
+| 11.2.1                                  | 11.2.463       | 17          | 2.12, 2.13    |

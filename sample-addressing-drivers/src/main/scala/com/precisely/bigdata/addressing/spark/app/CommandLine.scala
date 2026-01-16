@@ -36,7 +36,8 @@ class BaseCommandLine(arguments: Seq[String], driverClass: String, inputFieldsHe
   val outputFields: ScallopOption[List[String]] = opt[List[String]](descr = "Fields from the addressing candidate to include in the output", required = true, noshort = true)
   val errorField: ScallopOption[String] = opt[String](descr = "Output field name for any error information during processing of individual input record", noshort = true)
   val jsonOutputField: ScallopOption[String] = opt[String](descr = "Output field name for Json Response during processing of individual input record", noshort = true)
-  val country: ScallopOption[String] = opt[String](descr = "Country to use for all records when input country is not specified or is empty", noshort = true)
+  val country: ScallopOption[String] = opt[String](descr = "Name of country in ISO 3166-1 Alpha-2 or Alpha-3 format, or a common name of the country should be provided only if input country is not specified or is empty in the input fields", noshort = true)
+  val lookupKeyType: ScallopOption[String] = choice(descr = "ID lookup key type", default = Some("PB_KEY"), noshort = true, choices = Seq[String]("PB_KEY", "GNAF_PID", "UDPRN", "UPRN"))
   val operation: ScallopOption[String] = choice(descr = "Operation to be performed, ", required = true, noshort = true, choices = Seq[String]("geocode", "verify", "lookup", "reverseGeocode"))
 
 
