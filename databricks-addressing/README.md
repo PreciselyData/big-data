@@ -18,33 +18,61 @@ Use `JNAME=zulu17-ca-amd64` to enable Java 17.
 
 ![alt text](jname-17.png)
 
-## 2. Installing Reference Data
+## 2. Uploading the Geo Addressing SDK for Big Data product zip to Databricks
 
-**NOTE**: We recommend to extract the reference data during runtime, as downloading at dbfs path or volumes will create performance issues.
+Download the Geo Addressing SDK for Big Data product zip (geo-addressing-bigdata-distribution-<version>.zip) to your local environment. You should be able to find the URL for downloading the product distribution zip in your product delivery email from Precisely.
+
+You need to extract and manually upload the contents of the distribution zip to Databricks.
+
+```shell
+unzip geo-addressing-bigdata-distribution-<version>.zip -d ./geo-addressing-bigdata-distribution-<version>
+```
+
+### Option1: Uploading using Databricks CLI
+
+You can use Databricks CLI to upload the contents of the product distribution zip to DBFS or volumes as follows:
+- Install Databricks CLI and add authentication. Refer [install cli](https://docs.databricks.com/aws/en/dev-tools/cli/install) documentation for more information.
+- Use Databricks Copy Command for Copying the extracted SDK contents as follows:
+```shell
+databricks fs cp --recursive ./geo-addressing-bigdata-distribution-<version>/ dbfs:<your path e.g. /addressing/sdk>/geo-addressing-bigdata-distribution-<version>/
+```
+
+### Option2: Using Mounted Cloud Storage on Databricks
+
+Databricks enables users to mount cloud object storage to the Databricks File System (DBFS).
+Follow the below steps for uploading the distribution contents to Databricks:
+- Refer to [mounting cloud storage](https://docs.databricks.com/aws/en/dbfs/mounts) documentation by Databricks to mount your cloud storage path.
+- Upload the extracted contents of the distribution zip to your cloud storage.
+- Use databricks mount utility for directly loading into your databricks path. e.g. to load the sdk contents from S3, you can use the following code block:
+```shell
+dbutils.fs.mount(
+  source = "s3a://<your-bucket>/geo-addressing-bigdata-distribution-<version>/", 
+  mountPoint = "/mnt/<your-path>/geo-addressing-bigdata-distribution-<version>/"
+)
+```
+
+## 3. Installing the product SDK Jar as a Library in your Cluster
+
+Once you copy the extracted distribution contents to databricks, you have to install the product sdk jar to Databricks as a Library.
+The jar to be available at `<databricks-path>/geo-addressing-bigdata-distribution-<version>/spark/sdk/lib/geo-addressing-bigdata-addressing-sdk-spark2.13-<version>.jar` according to your cluster scala versions. Refer the [version chart](#version-chart) to decide which jar you should upload according to your cluster requirements.
+
+**NOTE: You might need to copy the SDK jar to your user's Workspace as Databricks doesn't allow installing jar from DBFS path. Refer to [this documentation](https://docs.databricks.com/aws/en/libraries/#java-and-scala-library-support) for more information on installing library in the cluster.**
+
+
+## 4. Installing Reference Data
+
+**NOTE**: We recommend to extract the reference data during runtime, as pre-downloading or pre-extracting at dbfs path or volumes will create performance issues.
 
 - Collect your Data Experience API Key and Secret Key by visiting https://data.precisely.com/autodownload.  You will need these for the Addressing Installation notebook.
 
 - Import the [Installation Guide Notebook](./Installing_SDK_and_Reference_Data.ipynb) in your Databricks account and follow the instructions by replacing the variables to install the reference data.
 The Addressing Installation notebook contains the commands necessary to install the addressing libraries and reference data. The first command provides configuration variables for the notebook and will need to be updated with values specific to your environment. After updating the configuration section, you can execute each cell individually or run the entire notebook to perform the installation.
 
-
-- You will also need to provide the URL for the location of the Geo Addressing SDK for Big Data product distribution. You should be able to find this URL in your product delivery email from Precisely. See these links for information on creating AWS presigned https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html , and for Azure https://docs.microsoft.com/en-us/rest/api/storageservices/Service-SAS-Examples?redirectedfrom=MSDN . If you prefer, you may manually copy the product distribution to your dbfs and use a file:///dbfs/<path_on_dbfs> URL.
-
 - Once those changes have been made, you can execute the cell.
 The rest of the cells can be executed in order.
 
 
 **NOTE**: This sample integrates Databricks with the Precisely Data Experience in order to access and configure your licensed reference data, which is required for running the geocoder.  Using your credentials you will be assured to be using the most recent data vintage.  This also expedites the setting up of data on your cluster.
-
-
-## 3. Installing the Geo Addressing SDK Jar File in the Cluster
-
-<strong> After executing the Installation Guide Notebook</strong>, you will see a jar called out in the results.  
-
-That jar should be added as a library to your cluster https://docs.databricks.com/libraries/index.html.
-
-
-**NOTE**: The sdk jar library for pyspark and scala notebooks to be attached is same.
 
 
 ## 4. Running the Geo Addressing Application
@@ -55,6 +83,7 @@ A sample notebook is provided along with required code snippts to run the Geo Ad
 For PySpark, refer [Geo_Addressing_Demo Notebook](./pyspark/Geo_Addressing_Demo.ipynb) for executing Geo Addressing Application.
 
 For Scala, refer [Geo_Addressing_Demo Notebook](./scala/Geo_Addressing_Demo.scala) for executing Geo Addressing Application.
+
 
 # Useful Links and References
 
