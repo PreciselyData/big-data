@@ -107,3 +107,4 @@ Refer to the following chart for GA-SDK version against Geo Addressing SDK for B
 | 5.2.2                                   | 11.1.1250      | 11          | 2.12          |
 | 11.2.0                                  | 11.2.228       | 17          | 2.12, 2.13    |
 | 11.2.1                                  | 11.2.463       | 17          | 2.12, 2.13    |
+| 11.2.2                                  | 11.2.690       | 17          | 2.12, 2.13    |
